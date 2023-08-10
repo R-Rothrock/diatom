@@ -1,0 +1,30 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-diatom-client:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: make
+      run: cd diatom-client
+           make
+
+  build-diatom-central:
+
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: make
+      run: cd diatom-central
+           make
