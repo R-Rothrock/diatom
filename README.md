@@ -31,7 +31,7 @@ Literally f***ing everything
    - [ ] tie the cli to all the fancy-ass s***
    - [ ] more makefile
  - Finishing up
-   - [ ] nothing could be more f***ing fun than CI
+   - [x] nothing could be more f***ing fun than CI
    - [ ] use a bunch of vms running Ubuntu base images to test it
    - [ ] find it doesn't even f***ing work, throw computer
 
