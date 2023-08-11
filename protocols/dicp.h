@@ -6,8 +6,8 @@
 
 #define DICP_PORT 12036
 
-enum dicp_requests;
+enum dicp_req;
 
-int dicp(enum dicp_requests __request, int sockfd, char *key, int iv, ...);
+int dicp(int sockfd, char *key, int iv, enum dicp_req req, ...);
 
 #endif /* DICP_H_ */

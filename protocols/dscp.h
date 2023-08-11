@@ -6,10 +6,9 @@
 
 #define DSCP_PORT 12036
 
-enum dscp_requests;
+enum dscp_req;
 
-int dscp(enum dscp_requests __request, int sockfd, char *key, int iv, ...);
-
-#define IV 123
+int dscp(int sockfd, char *key, int iv, enum dscp_req dscp_req,
+         ...)
 
 #endif /* DSCP_H_ */
