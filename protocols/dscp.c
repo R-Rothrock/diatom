@@ -28,7 +28,7 @@ int dscp(int sockfd, char *key, int iv, enum dscp_req req,
          ...)
 {
   va_list ptr;
-  va_start(alp, dscp_req);
+  va_start(ptr, dscp_req);
 
 void *buf;
 
@@ -38,11 +38,19 @@ void *buf;
       char *name = va_arg(ptr, void*);
       int id     = va_arg(ptr, int);
 
-      buf = malloc(1 + sizeof(*name) + sizeof(id));
+      buf = malloc(2 + sizeof(*name) + sizeof(id));
+      void *buf_cpy = buf;
 
-      *buf[0] = DSCP_START_PROCESS;
-      memcpy(*(buf + 1), *name, sizeof(*name));
-      memcpy(*(buf + 1 + sizeof(*name), id, sizeof(id)));
+      *buf_cpy[0] = iv;
+
+      buf_cpy++;
+      *buf_cpy[1] = DSCP_START_PROCESS;
+
+      buf_cpy++;
+      memcpy(*buf_cpy, *name, sizeof(*name));
+
+      buf_cpy += sizeof(*name);
+      memcpy(*buf_cpy, id, sizeof(id));
 
       break;
 
@@ -56,11 +64,19 @@ void *buf;
       int id   = va_arg(ptr, int);
       int code = va_arg(ptr, int);
 
-      *buf = malloc(1 + sizeof(int) * 2);
+      buf = malloc(2 + sizeof(int) * 2);
+      void *buf_cpy = buf;
 
-      *buf[0] = DSCP_KILL;
-      memcpy(*(buf + 1), id, sizeof(id));
-      memcpy(*(buf + 1 + sizeof(id)), code, sizeof(code));
+      *buf_cpy[0] = iv;
+      
+      buf_cpy++;
+      *buf_cpy[0] = DSCP_KILL;
+
+      buf_cpy++;
+      memcpy(*buf_cpy, id, sizeof(id));
+
+      buf_cpy += sizeof(int);
+      memcpy(*buf_cpy, code, sizeof(code));
 
       break;
     case DSCP_RESPONSE:

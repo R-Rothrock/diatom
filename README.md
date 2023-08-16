@@ -18,8 +18,7 @@ Literally f***ing everything
    - [x] figure out which port I'm going to use
    - [x] decide whether the protocols are made on TCP or UDP (speed v
    reliability)
-   - [ ] cryptography (AES-256 with predefined keys + symmetric
-   encryption)
+   - [ ] cryptography (AES-256 with predefined keys)
    - [ ] make the damn protocols
    - [ ] make a method for interpreting the protocols
  - Diatom client
