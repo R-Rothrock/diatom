@@ -18,22 +18,25 @@ Literally f***ing everything
    - [x] figure out which port I'm going to use
    - [x] decide whether the protocols are made on TCP or UDP (speed v
    reliability)
-   - [ ] cryptography (AES-256 with predefined keys)
-   - [ ] make the damn protocols
    - [ ] make a method for interpreting the protocols
  - Diatom client
-   - [ ] do some friendly neighborhood syscall hooking
-   - [ ] not to mention `process_vm_ready`
+   - [ ] make DICP
+   - [ ] encrypt with AES
+   - [ ] override some syscalls
+   - [ ] do some other stuff
    - [ ] duck-tape it all together
    - [ ] write a makefile in which it works
  - Diatom central
+   - [ ] make DSCP
+   - [ ] encrypt with AES
+   - [ ] do some other stuff
    - [ ] make a friendly cli
    - [ ] Elmer's glue to cli to the rest
    - [ ] more makefile
  - Finishing up
    - [x] nothing could be more fun than CI
    - [ ] use a bunch of vms running Ubuntu base images to test it
-   - [ ] find it doesn't f***ing work, throw computer
+   - [ ] find it doesn't f***ing work, delete repo, throw things
 
 ## To not do (yet, anyways)
  - Handle forks and threads
@@ -42,9 +45,7 @@ Literally f***ing everything
 
 ## Wanna contribute?
 
-Feel free. Put in an issue and I'll specify what needs to be done.
-
-Fair warning: you probably don't, though.
+**Wrong.** You do _not_ want to contribute.
 
 ### Why I called this Diatom
 
