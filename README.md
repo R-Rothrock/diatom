@@ -7,7 +7,7 @@ central node controls all other nodes. All nodes communicate with
 each other via the **Diatom Superior Communication Protocol** used by
 the central node and the **Diatom Inferior Communication Protocol**
 used by lesser nodes for requesting assets such as files and network
-sockets. Both will use UDP for communication on port 5352, removing
+sockets. Both will use UDP for communication on port 12036, removing
 the need for connections.
 
 ## TODO
