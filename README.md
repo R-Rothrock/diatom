@@ -17,18 +17,19 @@ Literally f***ing everything
  - Design the protocols
    - [x] figure out which port I'm going to use
    - [x] decide whether the protocols are made on TCP or UDP (speed v
-   reliability)
-   - [ ] make a method for interpreting the protocols
- - Diatom client
+   - [x] make DSCP
+   - [ ] encrypt with AES
    - [ ] make DICP
    - [ ] encrypt with AES
+   reliability)
+   - [ ] make a method for interpreting the protocols
+   - [x] much makefile
+ - Diatom client
    - [ ] override some syscalls
    - [ ] do some other stuff
    - [ ] duck-tape it all together
    - [ ] write a makefile in which it works
  - Diatom central
-   - [ ] make DSCP
-   - [ ] encrypt with AES
    - [ ] do some other stuff
    - [ ] make a friendly cli
    - [ ] Elmer's glue to cli to the rest
@@ -41,11 +42,12 @@ Literally f***ing everything
 ## To not do (yet, anyways)
  - Handle forks and threads
  - Make `ptrace` work at the same time
- - execute anything as admin
 
 ## Wanna contribute?
 
 **Wrong.** You do _not_ want to contribute.
+
+But if you really insist, reach out and I'll explain in more detail what can be accomplished.
 
 ### Why I called this Diatom
 

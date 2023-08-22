@@ -8,7 +8,6 @@
 
 enum dscp_req;
 
-int dscp(int sockfd, char *key, int iv, enum dscp_req dscp_req,
-         ...)
+int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req, uint8_t diatom_pid, ...);
 
 #endif /* DSCP_H_ */
