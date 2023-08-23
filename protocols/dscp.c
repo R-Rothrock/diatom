@@ -48,13 +48,15 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
   va_start(ptr, diatom_pid);
 
   int *buf;
+  uint8_t size;
 
   switch(req)
   {
     case DSCP_START_PROCESS:
       char *name = va_arg(ptr, char*);
 
-      buf = malloc(2 + strlen(name));
+      size = 2 + strlen(name);
+      buf = malloc(size);
 
       *buf = iv;
 
@@ -62,9 +64,9 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
       *buf = DSCP_RESPONSE & (diatom_pid >> 4);
 
       buf++;
-      memcpy(buf, name, sizeof(name));
+      memcpy(buf, name, strlen(name));
 
-      buf - 2;
+      buf -= 2;
 
       break;
 
@@ -77,7 +79,8 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
     case DSCP_KILL:
       uint8_t code = (uint8_t)va_arg(ptr, unsigned int);
 
-      buf = malloc(2);
+      size = 2;
+      buf = malloc(size);
 
       *buf = iv;
 
@@ -87,12 +90,15 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
       buf++;
       *buf = code;
 
+      buf -= 2;
+
       break;
     case DSCP_RESPONSE:
       uint8_t res = (uint8_t)va_arg(ptr, unsigned int);
-      char *data  = va_arg(ptr, void*);
+      char *data  = va_arg(ptr, char*);
 
-      buf = malloc(3 + strlen(data));
+      size = 3 + strlen(data);
+      buf = malloc(size);
 
       *buf = iv;
 
@@ -103,9 +109,9 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
       *buf = res;
 
       buf++;
-      memcpy(buf, data, sizeof(data));
+      memcpy(buf, data, strlen(data));
 
-      buf - 3;
+      buf -= 3;
 
       break;
     default:
@@ -118,7 +124,7 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
   // TODO encryption
   // not encrypting the first byte, since that's the IV.
 
-  write(sockfd, buf, sizeof(*buf));
+  write(sockfd, buf, size);
 
   return 0;
 }

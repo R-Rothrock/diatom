@@ -19,7 +19,7 @@ Literally f***ing everything
    - [x] decide whether the protocols are made on TCP or UDP (speed v
    - [x] make DSCP
    - [ ] encrypt with AES
-   - [ ] make DICP
+   - [x] make DICP
    - [ ] encrypt with AES
    reliability)
    - [ ] make a method for interpreting the protocols
