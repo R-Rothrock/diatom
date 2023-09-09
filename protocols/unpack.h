@@ -16,9 +16,12 @@ struct dicp_request_info_unpacked;
 struct dicp_fork_unpacked;   // NOT IMPLEMENTED
 struct dicp_thread_unpacked; // NOT IMPLEMENTED
 
+
+
 int unencrypt(char *ciphertxt, char *key, int iv);
 
-enum dicp_req get_dicp_req(char *request);
-enum dscp_req get_dscp_req(char *request);
+struct diatom_prot_sep;
+
+struct diatom_prot_sep sep_res(char *data);
 
 #endif /* UNPACK_H_ */
