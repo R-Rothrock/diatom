@@ -27,11 +27,11 @@ enum dicp_res
 int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
 {
   /* DICP_KILLED:
-   *       16              8          8
+   *       16             8          8
    * [ diatom PID ][ DICP_KILLED ][ code ]
    *
    * DICP_REQUEST_INFO:
-   *        16               4                     4             *
+   *       16                4                    4             *
    * [ diatom PID ][ DICP_REQUEST_INFO ][ enum dicp_res res ][ data ]
    *
    */
