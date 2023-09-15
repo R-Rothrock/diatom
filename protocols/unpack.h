@@ -1,4 +1,4 @@
-// pack.h
+// unpack.h
 // https://github.com/R-Rothrock/diatom
 // a library for packing and unpacking DICP and DSCP requests.
 

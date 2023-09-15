@@ -1,4 +1,4 @@
-// pack.c
+// unpack.c
 // https://github.com/R-Rothrock/diatom
 
 #include "pack.h"
