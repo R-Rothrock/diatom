@@ -2,7 +2,7 @@
 
 **Diatom** ~~is~~ _will be_ a interface by which a "central node" can
 connect to and utilize the CPUs of other "nodes" on the network,
-resulting in a linear distrubuted computation network, in which the
+resulting in a distributed computation network, in which the
 central node controls all other nodes. All nodes communicate with
 each other via the **Diatom Superior Communication Protocol** used by
 the central node and the **Diatom Inferior Communication Protocol**
@@ -14,51 +14,70 @@ I envision this being a sizable project, and so I would very much
 appreciate anyone's contributions. You can take a look at the checklist
 below and feel free to email me with any questions.
 
-## TODO
+## Checklist
 
-A lot
+### 0.0.1
 
  - Design the protocols
    - [x] figure out which port I'm going to use
-   - [x] decide whether the protocols are made on TCP or UDP (speed v reliability)
+   - [x] decide whether the protocols are made on TCP or UDP (speed v
+     reliability)
    - [x] make DSCP
      - `protocols/dscp.c`
      - `protocols/dscp.h`
    - [x] make DICP
      - `protocols/dicp.c`
      - `protocols/dicp.h`
-   - [X] make a method for unpacking the protocols
+   - [x] make a method for unpacking the protocols
      - `protocols/unpack.c`
      - `protocols/unpack.h`
    - [x] much makefile
      - `protocols/makefile`
  - Diatom client
-   - [ ] sandboxing
-     - `diatom_client/env.c`
-   - [ ] do some other stuff
-     - `diatom_client/handler.c`
-     - `diatom_client/threads.c`
+   - [ ] sandbox environment
+     - `diatom-client/env.c`
+   - [ ] handle UDP
+     - `diatom-client/handler.c`
+   - [ ] manage threads
+     - `diatom-client/threads.c`
+   - [ ] get some persistent data storage
+     - `diatom-client/data.c`
    - [ ] duck-tape it all together
-     - `diatom_client/main.c`
+     - `diatom-client/main.c`
    - [ ] write a makefile in which it works
-     - `diatom_client/makefile`
+     - `diatom-client/makefile`
+   - [ ] write a service file for installation
+     - `diatom-client/diatom-client.service`
+   - [ ] add `make install` to makefile
+     - `diatom-client/makefile`
  - Diatom central
    - [ ] make a friendly cli
-   - [ ] dp some other stuff
-   - [ ] Elmer's glue to cli to the rest
-   - [ ] more makefile
+     - `diatom-central/cli.c`
+   - [ ] handle processes over UDP
+     - `diatom-central/handler.c`
+   - [ ] GUI?
+     - `diatom-central/gui.c` ???
+   - [ ] Elmer's glue it all together
+     - `diatom-central/main.c`
+   - [ ] write a makefile
+     - `diatom-central/makefile`
+   - [ ] add a service files
+     - `diatom-central/diatom-central.service`
+   - [ ] add `make install` formula to makefile
+     - `diatom-central/makefile`
  - Other
-   - [x] nothing could be more fun than CI
-   - [ ] use a bunch of vms running Ubuntu base images to test it
-   - [ ] find it doesn't work, delete repo, throw things
+   - [x] add a build workflow
+   - [ ] test it with Virtualbox and Ubuntu base images
+   - [ ] add a test workflow?
 
-## To not do (yet, anyways)
- - Handle forks and threads
- - Make `ptrace` work at the same time
+### 1.0.0
+ - handle forks and threads
+ - handle `ptrace`, `process_vm_readv`, etc.
+ - maybe make that GUI?
+ - fix the many problems that will inevitably come across the path
 
-One day, but not today...
 
-### Why I called this Diatom
+## Why I called this Diatom
 
 A [diatom](https://diatoms.org/what-are-diatoms) is a unicellular
 kind of algae and is the base form of plankton. I found this close
