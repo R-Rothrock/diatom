@@ -16,12 +16,9 @@ Literally f***ing everything
 
  - Design the protocols
    - [x] figure out which port I'm going to use
-   - [x] decide whether the protocols are made on TCP or UDP (speed v
+   - [x] decide whether the protocols are made on TCP or UDP (speed v reliability)
    - [x] make DSCP
-   - [ ] encrypt with AES
    - [x] make DICP
-   - [ ] encrypt with AES
-   reliability)
    - [ ] make a method for interpreting the protocols
    - [x] much makefile
  - Diatom client

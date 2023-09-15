@@ -6,8 +6,6 @@
 #include<string.h>
 #include<unistd.h>
 
-#include<openssl/evp.h>
-
 #include "dscp.h"
 
 enum dscp_req
@@ -28,20 +26,19 @@ enum dscp_res
   DSCP_RES_MEMORY,  // other process memory or registers NOT IMPLEMENTED
 } __attribute__((__packed__));
 
-int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
-         uint8_t diatom_pid, ...)
+int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
 {
   /* DSCP_START_PROCESS:
-   *   8            4                  4            *
-   * [ iv ][ DSCP_START_PROCESS ][ diatom PID ][ pathname ]
+   *       16                8                *
+   * [ diatom PID ][ DSCP_START_PROCESS ][ pathname ]
    *
    * DSCP_KILL:
-   *   8         4            4          8
-   * [ iv ][ DSCP_KILL ][ diatom PID ][ code ]
+   *       16            8         8
+   * [ diatom PID ][ DSCP_KILL ][ code ]
    *
    * DSCP_RESPONSE:
-   *   8           4              4               8           *
-   * [ iv ][ DSCP_RESPONSE ][ diatom PID ][ enum dscp_res ][ data ]
+   *       16              4                4           *
+   * [ diatom PID ][ DSCP_RESPONSE ][ enum dscp_res ][ data ]
    */
 
   va_list ptr;
@@ -53,20 +50,20 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
   switch(req)
   {
     case DSCP_START_PROCESS:
-      char *name = va_arg(ptr, char*);
+      char *pathname = va_arg(ptr, char*);
 
-      size = 2 + strlen(name);
+      size = 3 + strlen(pathname) + 1; // +1 is null byte
       buf = malloc(size);
 
-      *buf = iv;
+      *buf = diatom_pid;
+
+      buf += 2;
+      *buf = DSCP_RESPONSE;
 
       buf++;
-      *buf = DSCP_RESPONSE & (diatom_pid >> 4);
+      memcpy(buf, pathname, strlen(pathname));
 
-      buf++;
-      memcpy(buf, name, strlen(name));
-
-      buf -= 2;
+      buf -= 3;
 
       break;
 
@@ -79,34 +76,31 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
     case DSCP_KILL:
       uint8_t code = (uint8_t)va_arg(ptr, unsigned int);
 
-      size = 2;
+      size = 4;
       buf = malloc(size);
 
-      *buf = iv;
+      *buf = diatom_pid;
 
-      buf++;
-      *buf = DSCP_KILL & (diatom_pid >> 4);
+      buf += 2;
+      *buf = DSCP_KILL;
 
       buf++;
       *buf = code;
 
-      buf -= 2;
+      buf -= 3;
 
       break;
     case DSCP_RESPONSE:
-      uint8_t res = (uint8_t)va_arg(ptr, unsigned int);
+      uint8_t res = va_arg(ptr, uint8_t);
       char *data  = va_arg(ptr, char*);
 
-      size = 3 + strlen(data);
+      size = 3 + strlen(data) + 1; // +1 is null byte
       buf = malloc(size);
 
-      *buf = iv;
+      *buf = diatom_pid;
 
-      buf++;
-      *buf = DSCP_RESPONSE & (diatom_pid >> 4);
-
-      buf++;
-      *buf = res;
+      buf += 2;
+      *buf = DSCP_RESPONSE & (res >> 4);
 
       buf++;
       memcpy(buf, data, strlen(data));
@@ -120,9 +114,6 @@ int dscp(int sockfd, char *key, uint8_t iv, enum dscp_req req,
   }
 
   va_end(ptr);
-
-  // TODO encryption
-  // not encrypting the first byte, since that's the IV.
 
   write(sockfd, buf, size);
 

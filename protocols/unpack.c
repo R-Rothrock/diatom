@@ -1,8 +1,6 @@
 // unpack.c
 // https://github.com/R-Rothrock/diatom
 
-#include<openssl/evp.h>
-
 #include "unpack.h"
 
 enum dicp_req
@@ -41,14 +39,14 @@ enum dscp_res
 
 struct dicp_killed_unpacked
 {
-  uint8_t diatom_pid:4;
-  uint8_t code:4;
+  uint16_t diatom_pid;
+  uint8_t code;
 };
 
 struct dicp_request_info_unpacked
 {
-  uint8_t diatom_pid:4;
-  enum dicp_res res:4;
+  uint16_t diatom_pid;
+  enum dicp_res res;
   char *data;
 };
 
@@ -64,7 +62,7 @@ struct dicp_thread_unpacked
 
 struct dscp_start_process_unpacked
 {
-  uint8_t diatom_pid;
+  uint16_t diatom_pid;
   char *pathname;
 };
 
@@ -80,29 +78,13 @@ struct dscp_start_thread_unpacked
 
 struct dscp_kill_unpacked
 {
-  uint8_t diatom_pid;
+  uint16_t diatom_pid;
   uint8_t code;
 };
 
 struct dscp_response
 {
-  uint8_t diatom_pid;
+  uint16_t diatom_pid;
   enum dscp_res res;
   char *data;
 };
-
-int unencrypt(char *ciphertxt, char *key, int iv)
-{
-  // TODO
-}
-
-struct diatom_prot_sep
-{
-  uint8_t iv;
-  char *ciphertext;
-};
-
-struct diatom_prot_sep sep_res(char *data)
-{
-  // TODO
-}

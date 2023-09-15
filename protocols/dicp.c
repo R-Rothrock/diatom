@@ -15,7 +15,7 @@ enum dicp_req
   DICP_REQUEST_INFO, // requests files, sockets, etc.
   DICP_FORK,         // NOT IMPLEMENTED
   DICP_THREAD,       // NOT IMPLEMENTED
-} __attribute__((packed));
+} __attribute__((packed)); // all values are uint8_t
 
 enum dicp_res
 {
@@ -25,15 +25,15 @@ enum dicp_res
   DICP_RES_MEMORY,  // request memory and/or registers NOT IMPLEMENTED
 } __attribute__((packed));
 
-int dicp(int sockfd, char *key, int iv, enum dicp_req req, uint8_t diatom_pid, ...)
+int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
 {
   /* DICP_KILLED:
-   *   8          4             4          8
-   * [ iv ][ DICP_KILLED ][ diatom PID ][ code ]
+   *       16              8          8
+   * [ diatom PID ][ DICP_KILLED ][ code ]
    *
    * DICP_REQUEST_INFO:
-   *   8             4                 4               8           *
-   * [ iv ][ DICP_REQUEST_INFO ][ diatom PID  ][ enum dicp_res ][ data ]
+   *        16               4                     4             *
+   * [ diatom PID ][ DICP_REQUEST_INFO ][ enum dicp_res res ][ data ]
    *
    */
 
@@ -48,34 +48,31 @@ int dicp(int sockfd, char *key, int iv, enum dicp_req req, uint8_t diatom_pid, .
     case DICP_KILLED:
       uint8_t code = (uint8_t)va_arg(ptr, unsigned int);
 
-      size = 3;
+      size = 4;
       buf = malloc(size);
 
-      *buf = iv;
+      *buf = diatom_pid;
 
-      buf++;
-      *buf = DICP_KILLED & (diatom_pid >> 4);
+      buf += 2;
+      *buf = DICP_KILLED;
 
       buf++;
       *buf = code;
 
-      buf -= 2;
+      buf -= 3;
 
       break;
     case DICP_REQUEST_INFO:
       uint8_t res = (uint8_t)va_arg(ptr, unsigned int);
       char *data  = va_arg(ptr, char*);
 
-      size = 3 + strlen(data);
+      size = 3 + strlen(data) + 1; // +1 is null byte
       buf = malloc(size);
 
-      *buf = iv;
+      *buf = diatom_pid;
 
-      buf++;
-      *buf = DICP_REQUEST_INFO & (diatom_pid >> 4);
-
-      buf++;
-      *buf = res;
+      buf += 2;
+      *buf = DICP_REQUEST_INFO & (res >> 4);
 
       buf++;
       memcpy(buf, data, strlen(data));
@@ -89,9 +86,6 @@ int dicp(int sockfd, char *key, int iv, enum dicp_req req, uint8_t diatom_pid, .
   }
 
   va_end(ptr);
-
-  // TODO encryption
-  // not encrypting the first byte, since that's the IV.
 
   write(sockfd, buf, size);
 }
