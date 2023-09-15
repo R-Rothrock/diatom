@@ -10,41 +10,53 @@ used by lesser nodes for requesting assets such as files and network
 sockets. Both will use UDP for communication on port 12036, removing
 the need for connections.
 
+I envision this being a sizable project, and so I would very much
+appreciate anyone's contributions. You can take a look at the checklist
+below and feel free to email me with any questions.
+
 ## TODO
 
-Literally f***ing everything
+A lot
 
  - Design the protocols
    - [x] figure out which port I'm going to use
    - [x] decide whether the protocols are made on TCP or UDP (speed v reliability)
    - [x] make DSCP
+     - `protocols/dscp.c`
+     - `protocols/dscp.h`
    - [x] make DICP
+     - `protocols/dicp.c`
+     - `protocols/dicp.h`
    - [ ] make a method for interpreting the protocols
+     - `protocols/unpack.c`
+     - `protocols/unpack.h`
    - [x] much makefile
+     - `protocols/makefile`
  - Diatom client
-   - [ ] override some syscalls
+   - [ ] sandboxing
+     - `diatom_client/env.c`
    - [ ] do some other stuff
+     - `diatom_client/handler.c`
+     - `diatom_client/threads.c`
    - [ ] duck-tape it all together
+     - `diatom_client/main.c`
    - [ ] write a makefile in which it works
+     - `diatom_client/makefile`
  - Diatom central
-   - [ ] do some other stuff
    - [ ] make a friendly cli
+   - [ ] dp some other stuff
    - [ ] Elmer's glue to cli to the rest
    - [ ] more makefile
- - Finishing up
+ - Other
    - [x] nothing could be more fun than CI
    - [ ] use a bunch of vms running Ubuntu base images to test it
-   - [ ] find it doesn't f***ing work, delete repo, throw things
+   - [ ] find it doesn't work, delete repo, throw things
 
 ## To not do (yet, anyways)
  - Handle forks and threads
  - Make `ptrace` work at the same time
 
-## Wanna contribute?
-
-**Wrong.** You do _not_ want to contribute.
-
-But if you really insist, reach out and I'll explain in more detail what can be accomplished.
+One day, but not today...
 
 ### Why I called this Diatom
 
