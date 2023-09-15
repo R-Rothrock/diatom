@@ -44,7 +44,7 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
   va_list ptr;
   va_start(ptr, diatom_pid);
 
-  int *buf;
+  uint8_t *buf;
   uint8_t size;
 
   switch(req)
@@ -61,7 +61,7 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
       *buf = DSCP_RESPONSE;
 
       buf++;
-      memcpy(buf, pathname, strlen(pathname));
+      memcpy(buf, pathname, strlen(pathname) + 1);
 
       buf -= 3;
 
@@ -74,7 +74,7 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
       return -1; // NOT IMPLEMENTED
       break;
     case DSCP_KILL:
-      uint8_t code = (uint8_t)va_arg(ptr, unsigned int);
+      uint8_t code = (uint8_t)va_arg(ptr, int);
 
       size = 4;
       buf = malloc(size);
@@ -91,7 +91,7 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
 
       break;
     case DSCP_RESPONSE:
-      uint8_t res = va_arg(ptr, uint8_t);
+      uint8_t res = va_arg(ptr, int);
       char *data  = va_arg(ptr, char*);
 
       size = 3 + strlen(data) + 1; // +1 is null byte
@@ -103,7 +103,7 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
       *buf = DSCP_RESPONSE & (res >> 4);
 
       buf++;
-      memcpy(buf, data, strlen(data));
+      memcpy(buf, data, strlen(data) + 1);
 
       buf -= 3;
 
@@ -116,6 +116,8 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
   va_end(ptr);
 
   write(sockfd, buf, size);
+
+  free(buf);
 
   return 0;
 }

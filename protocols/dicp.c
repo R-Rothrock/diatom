@@ -2,7 +2,6 @@
 // https://github.com/R-Rothrock/diatom
 
 #include<stdarg.h>
-#include<stdint.h>
 #include<stdlib.h>
 #include<string.h>
 #include<unistd.h>
@@ -40,13 +39,13 @@ int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
   va_list ptr;
   va_start(ptr, diatom_pid);
 
-  int *buf;
+  uint8_t *buf;
   uint8_t size;
 
   switch(req)
   {
     case DICP_KILLED:
-      uint8_t code = (uint8_t)va_arg(ptr, unsigned int);
+      uint8_t code = (uint8_t)va_arg(ptr, int);
 
       size = 4;
       buf = malloc(size);
@@ -63,7 +62,7 @@ int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
 
       break;
     case DICP_REQUEST_INFO:
-      uint8_t res = (uint8_t)va_arg(ptr, unsigned int);
+      uint8_t res = (uint8_t)va_arg(ptr, int);
       char *data  = va_arg(ptr, char*);
 
       size = 3 + strlen(data) + 1; // +1 is null byte
@@ -75,7 +74,7 @@ int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
       *buf = DICP_REQUEST_INFO & (res >> 4);
 
       buf++;
-      memcpy(buf, data, strlen(data));
+      memcpy(buf, data, strlen(data) +1);
 
       buf -= 3;
 
@@ -88,4 +87,6 @@ int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
   va_end(ptr);
 
   write(sockfd, buf, size);
+
+  free(buf);
 }

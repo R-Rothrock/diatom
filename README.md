@@ -27,9 +27,12 @@ A lot
    - [x] make DICP
      - `protocols/dicp.c`
      - `protocols/dicp.h`
-   - [ ] make a method for interpreting the protocols
-     - `protocols/unpack.c`
-     - `protocols/unpack.h`
+   - [X] make a method for unpacking the protocols
+     - `protocols/pack.c`
+     - `protocols/pack.h`
+   - [ ] make a method for packing the protocols
+     - `protocols/pack.c`
+     - `protocols/pack.h`
    - [x] much makefile
      - `protocols/makefile`
  - Diatom client
