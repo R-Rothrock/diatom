@@ -16,6 +16,8 @@ below and feel free to email me with any questions.
 
 ## Checklist
 
+All of this will go in a changelog someday, but not now.
+
 ### 0.0.1
 
  - Design the protocols
@@ -57,8 +59,6 @@ below and feel free to email me with any questions.
      - `diatom-central/handler.c`
    - [ ] add persistent data storage
      - `diatom-central/data.c`
-   - [ ] GUI?
-     - `diatom-central/gui.c` ???
    - [ ] Elmer's glue it all together
      - `diatom-central/main.c`
    - [ ] write a makefile
@@ -72,12 +72,16 @@ below and feel free to email me with any questions.
    - [ ] test it with Virtualbox and Ubuntu base images
    - [ ] add a test workflow?
 
-### 1.0.0
+### 0.0.2
  - handle forks and threads
- - handle `ptrace`, `process_vm_readv`, etc.
- - maybe make that GUI?
- - fix the many problems that will inevitably come across the path
+ - configure AES options
 
+### 0.0.3
+ - handle `ptrace` calls.
+ - Maybe add a status GUI to `diatom-central`
+
+### 1.0.0
+ - fix the many, many, problems that will come along the way.
 
 ## Why I called this Diatom
 
