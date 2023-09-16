@@ -24,7 +24,7 @@ To keep track of the different nodes on the network, there will need to be a
 database for keeping track, and, to edit this file, one will need superuser
 privileges. Keep in mind to **only add computers you trust into the config
 file.** Any computer you add will be capable of accessing files, network
-sockets, and possible more. At first, this database will be edited manually by a
+sockets, and possibly more. At first, this database will be edited manually by a
 `sudo` instance. Then, I'll likely add another executable to add some QoL to the
 picture.
 
@@ -49,6 +49,14 @@ All of this will go in a changelog someday, but not now.
      - `protocols/unpack.h`
    - [x] much makefile
      - `protocols/makefile`
+ - Design the logging system
+   - [x] make logging functions
+     - `logging/logging.c`
+     - `logging/logging.h`
+   - [ ] add conventional time format to the logs
+     - `logging/logging.c`
+   - [ ] add makefile
+     - `logging/makefile`
  - Diatom client
    - [ ] sandbox environment
      - `diatom-client/env.c`
