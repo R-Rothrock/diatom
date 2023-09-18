@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Build Test
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
   build-diatom-central:
 
     runs-on: ubuntu-latest
-  
+
     steps:
     - uses: actions/checkout@v3
 
