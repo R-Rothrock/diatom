@@ -5,55 +5,59 @@
 
 #include "logging.h"
 
+char *get_formatted_time(void)
+{
+  // TODO
+}
 
 void debug(char *msg)
 {
-  printf(DEBUG, time(NULL), msg);
+  printf(DEBUG, get_formatted_time(), msg);
 }
 
 void info(char *msg)
 {
-  printf(INFO, time(NULL), msg);
+  printf(INFO, get_formatted_time(), msg);
 }
 
 void warning(char *msg)
 {
-  printf(WARNING, time(NULL), msg);
+  printf(WARNING, get_formatted_time(), msg);
 }
 
 void critical(char *msg)
 {
-  printf(CRITICAL, time(NULL), msg);
+  printf(CRITICAL, get_formatted_time(), msg);
 }
 
 void error(char *msg)
 {
-  printf(ERROR, time(NULL), msg);
+  printf(ERROR, get_formatted_time(), msg);
 }
 
 void debugf(char *msg, FILE *stream)
 {
-  fprintf(stream, DEBUG, time(NULL), msg);
+  fprintf(stream, DEBUG, get_formatted_time(), msg);
 }
 
 void infof(char *msg, FILE *stream)
 {
-  fprintf(stream, INFO, time(NULL), msg);
+  fprintf(stream, INFO, get_formatted_time(), msg);
 }
 
 void warningf(char *msg, FILE *stream)
 {
-  fprintf(stream, WARNING, time(NULL), msg);
+  fprintf(stream, WARNING, get_formatted_time(), msg);
 }
 
 void criticalf(char *msg, FILE *stream)
 {
-  fprintf(stream, CRITICAL, time(NULL), msg);
+  fprintf(stream, CRITICAL, get_formatted_time(), msg);
 }
 
 void errorf(char *msg, FILE *stream)
 {
-  fprintf(stream, ERROR, time(NULL), msg);
+  fprintf(stream, ERROR, get_formatted_time(), msg);
 }
 
 /*

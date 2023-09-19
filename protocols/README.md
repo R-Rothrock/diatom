@@ -1,4 +1,9 @@
 # The `protocols/` directory
 
-This directory defines the headers necessary for the different
-protocols Diatom central and Diatom client use.
+creates an object file necessary for the different
+protocols Diatom central and Diatom client.
+
+## Compilation
+```
+make
+```

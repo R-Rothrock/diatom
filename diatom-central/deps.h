@@ -2,6 +2,9 @@
 // https://github.com/R-Rothrock/diatom
 // externs to required object files.
 
+#ifndef DEPS_H_
+#define DEPS_H_
+
 #include<stdint.h>
 
 // protocols/dscp.h
@@ -24,3 +27,18 @@ extern struct dicp_killed unpack_dicp_killed(void *buf);
 extern struct dicp_request_info unpack_dicp_request_info(void *buf);
 
 // TODO logging/logging.h
+extern char *get_formatted_time(void);
+
+extern debug(char *msg);
+extern info(char *msg);
+extern warning(char *msg);
+extern critical(char *msg);
+extern error(char *msg);
+
+extern debugf(char *msg);
+extern infof(char *msg);
+extern warningf(char *msg);
+extern criticalf(char *msg);
+extern errorf(char *msg);
+
+#endif /* DEPS_H_ */
