@@ -1,3 +1,4 @@
 #!/usr/bin/make
 
-# TODO this
+all:
+	echo TODO
