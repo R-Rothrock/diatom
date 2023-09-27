@@ -1,3 +1,4 @@
-# Not even here yet
+# The `diatom-central/` directory
 
-Hold up. Geez.
+All main source code for Diatom Central, along with the makefile to tie
+it all together.

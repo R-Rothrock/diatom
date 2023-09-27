@@ -1,3 +1,1 @@
 #!/usr/bin/make
-
-# TODO this

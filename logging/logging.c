@@ -7,8 +7,10 @@
 
 char *get_formatted_time(void)
 {
-  // TODO
+  char str[10];
+  sprintf(str, "%i", time(NULL));
 }
+
 
 void debug(char *msg)
 {
