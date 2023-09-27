@@ -1,4 +1,4 @@
 #!/usr/bin/make
 
 all:
-	echo TODO
+	echo "TODO"
