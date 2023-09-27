@@ -53,9 +53,9 @@ All of this will go in a changelog someday, but not now.
    - [x] make logging functions
      - `logging/logging.c`
      - `logging/logging.h`
-   - [ ] add conventional time format to the logs
+   - [x] add conventional time format to the logs
      - `logging/logging.c`
-   - [ ] add makefile
+   - [x] add makefile
      - `logging/makefile`
  - Diatom client
    - [ ] sandbox environment
