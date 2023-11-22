@@ -26,7 +26,7 @@ extern enum dicp_req ident_dicp(void *buf);
 extern struct dicp_killed unpack_dicp_killed(void *buf);
 extern struct dicp_request_info unpack_dicp_request_info(void *buf);
 
-// TODO logging/logging.h
+// logging/logging.h
 extern char *get_formatted_time(void);
 
 extern debug(char *msg);
