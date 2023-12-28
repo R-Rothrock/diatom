@@ -58,7 +58,7 @@ All of this will go in a changelog someday, but not now.
    - [x] add makefile
      - `logging/makefile`
  - Diatom client
-   - [ ] sandbox environment
+   - [x] sandbox environment
      - `diatom-client/env.c`
    - [ ] handle UDP
      - `diatom-client/handler.c`
