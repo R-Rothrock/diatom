@@ -37,7 +37,7 @@ All of this will go in a changelog someday, but not now.
  - Design the protocols
    - [x] figure out which port I'm going to use
    - [x] decide whether the protocols are made on TCP or UDP (speed v
-     reliability)
+      reliability)
    - [x] make DSCP
      - `protocols/dscp.c`
      - `protocols/dscp.h`
@@ -49,6 +49,8 @@ All of this will go in a changelog someday, but not now.
      - `protocols/unpack.h`
    - [x] much makefile
      - `protocols/makefile`
+   - [ ] tally all the things that a process can request from its
+      kernel and make it possible.
  - Design the logging system
    - [x] make logging functions
      - `logging/logging.c`
