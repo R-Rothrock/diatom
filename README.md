@@ -1,32 +1,9 @@
 # Diatom
 
-**Diatom** ~~is~~ _will be_ a interface by which a "central node" can
-connect to and utilize the CPUs of other "nodes" on the network,
-resulting in a distributed computation network, in which the
-central node controls all other nodes.
-
-I envision this being a sizable project, and so I would very much
-appreciate anyone's contributions. You can take a look at the checklist
-below and feel free to email me with any questions.
-
-## My jumbled notes to myself
-
-All nodes communicate with each other via the **Diatom Superior Communication
-Protocol** used by the central node and the **Diatom Inferior Communication
-Protocol** used by lesser nodes for requesting assets such as files and network
-sockets. Both will use UDP for communication on port 12036, removing the need
-for connections.
-
-For Diatom Central, there will simply be an executable with some SQLite
-databases. As for Diatom Client, there will be a service running.
-
-To keep track of the different nodes on the network, there will need to be a
-database for keeping track, and, to edit this file, one will need superuser
-privileges. Keep in mind to **only add computers you trust into the config
-file.** Any computer you add will be capable of accessing files, network
-sockets, and possibly more. At first, this database will be edited manually by a
-`sudo` instance. Then, I'll likely add another executable to add some QoL to the
-picture.
+**Diatom** ~~is~~ _will be_ a program capable of running the program of
+one "central" computer on another "client" computer when imitating the
+central computer's environment. This is accomplished with unencrypted
+UDP communication and ptrace-based syscall emulation.
 
 ## Checklist
 
@@ -95,17 +72,32 @@ All of this will go in a changelog someday, but not now.
    - [ ] add a test workflow?
 
 ### 0.0.2
+
  - handle forks and threads
  - configure AES options
 
 ### 0.0.3
+
  - handle `ptrace` calls.
  - handle `process_vm_readv` and `process_vm_writev` calls
  - Maybe add a status GUI to `diatom-central`
 
 ### 1.0.0
+
  - fix the many, many, problems that will come along the way.
  - thoroughly test this thing for vulnerabilities
+
+## Installation
+
+Can't say.
+
+## Usage
+
+Can't say.
+
+## Contribution
+
+Can't say.
 
 ## Why I called this Diatom
 
