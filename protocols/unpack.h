@@ -5,11 +5,10 @@
 #ifndef UNPACK_H_
 #define UNPACK_H_
 
+#include "info.h"
+
 enum dicp_req;
 enum dscp_req;
-
-enum dicp_res;
-enum dscp_res;
 
 struct dicp_killed;
 struct dicp_request_info;

@@ -18,14 +18,6 @@ enum dscp_req
                       // sockets, environment variables, etc.)
 } __attribute__((packed));
 
-enum dscp_res
-{
-  DSCP_RES_FILE,    // responding to a request for a file (sockets, too)
-  DSCP_RES_ENVIRON, // responding to a request for environment variables
-  DSCP_RES_PROCESS, // other process state NOT IMPLEMENTED
-  DSCP_RES_MEMORY,  // other process memory or registers NOT IMPLEMENTED
-} __attribute__((__packed__));
-
 int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
 {
   /* DSCP_START_PROCESS:
@@ -37,8 +29,8 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
    * [ diatom PID ][ DSCP_KILL ][ code ]
    *
    * DSCP_RESPONSE:
-   *       16              4                4           *
-   * [ diatom PID ][ DSCP_RESPONSE ][ enum dscp_res ][ data ]
+   *       16              4              4         *
+   * [ diatom PID ][ DSCP_RESPONSE ][ enum info ][ data ]
    */
 
   va_list ptr;
@@ -91,7 +83,7 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
 
       break;
     case DSCP_RESPONSE:
-      uint8_t res = va_arg(ptr, int);
+      uint8_t res = (uint8_t)va_arg(ptr, int);
       char *data  = va_arg(ptr, char*);
 
       size = 3 + strlen(data) + 1; // +1 is null byte

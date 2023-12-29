@@ -6,6 +6,8 @@
 
 #include<stdint.h>
 
+#include<info.h>
+
 #define DSCP_PORT 12036
 
 enum dscp_req;

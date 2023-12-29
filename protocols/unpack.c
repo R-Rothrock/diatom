@@ -4,6 +4,7 @@
 #include<stdint.h>
 #include<string.h>
 
+#include "info.h"
 #include "unpack.h"
 
 enum dicp_req
@@ -24,22 +25,6 @@ enum dscp_req
                       // sockets, environment variables, etc.)
 } __attribute__((packed));
 
-enum dicp_res
-{
-  DICP_RES_FILE,    // request a file (sokets, too)
-  DICP_RES_ENVIRON, // request environment variables
-  DICP_RES_PROCESS, // ptrace stuff NOT IMPLEMENTED
-  DICP_RES_MEMORY,  // request memory and/or registers NOT IMPLEMENTED
-} __attribute__((packed));
-
-enum dscp_res
-{
-  DSCP_RES_FILE,    // responding to a request for a file (sockets, too)
-  DSCP_RES_ENVIRON, // responding to a request for environment variables
-  DSCP_RES_PROCESS, // other process state NOT IMPLEMENTED
-  DSCP_RES_MEMORY,  // other process memory or registers NOT IMPLEMENTED
-} __attribute__((__packed__));
-
 struct dicp_killed
 {
   uint16_t diatom_pid;
@@ -49,7 +34,7 @@ struct dicp_killed
 struct dicp_request_info
 {
   uint16_t diatom_pid;
-  enum dicp_res res;
+  enum info info;
   char *data;
 };
 
@@ -88,7 +73,7 @@ struct dscp_kill
 struct dscp_response
 {
   uint16_t diatom_pid;
-  enum dscp_res res;
+  enum info info;
   char *data;
 };
 
@@ -123,7 +108,7 @@ struct dicp_request_info unpack_dicp_request_info(void *buf)
 
   buf += 2;
 
-  ret.res = *((uint8_t*)buf);
+  ret.info = *((uint8_t*)buf);
 
   buf++;
 
@@ -172,7 +157,7 @@ struct dscp_response unpack_dscp_response(void *buf)
 
   buf += 2;
 
-  ret.res = *((uint8_t*)buf);
+  ret.info = *((uint8_t*)buf);
 
   buf++;
 

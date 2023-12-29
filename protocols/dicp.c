@@ -16,14 +16,6 @@ enum dicp_req
   DICP_THREAD,       // NOT IMPLEMENTED
 } __attribute__((packed)); // all values are uint8_t
 
-enum dicp_res
-{
-  DICP_RES_FILE,    // request a file (sokets, too)
-  DICP_RES_ENVIRON, // request environment variables
-  DICP_RES_PROCESS, // ptrace stuff NOT IMPLEMENTED
-  DICP_RES_MEMORY,  // request memory and/or registers NOT IMPLEMENTED
-} __attribute__((packed));
-
 int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
 {
   /* DICP_KILLED:
@@ -31,8 +23,8 @@ int dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...)
    * [ diatom PID ][ DICP_KILLED ][ code ]
    *
    * DICP_REQUEST_INFO:
-   *       16                4                    4             *
-   * [ diatom PID ][ DICP_REQUEST_INFO ][ enum dicp_res res ][ data ]
+   *       16                4                4         *
+   * [ diatom PID ][ DICP_REQUEST_INFO ][ enum info ][ data ]
    *
    */
 

@@ -28,6 +28,8 @@ All of this will go in a changelog someday, but not now.
      - `protocols/makefile`
    - [ ] tally all the things that a process can request from its
       kernel and make it possible.
+     - `protocols/dicp.c`
+     - `protocols/dscp.c`
  - Design the logging system
    - [x] make logging functions
      - `logging/logging.c`
