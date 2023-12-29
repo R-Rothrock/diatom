@@ -11,9 +11,7 @@
 enum dscp_req
 {
   DSCP_START_PROCESS, // used to start processes
-  DSCP_START_FORK,    // NOT IMPLEMENTED
-  DSCP_START_THREAD,  // NOT IMPLEMENTED
-  DSCP_KILL,          // used to stop proccess (or start, depending)
+  DSCP_KILL,          // used to stop proccess
   DSCP_RESPONSE,      // used to respond to info requests (files,
                       // sockets, environment variables, etc.)
 } __attribute__((packed));
@@ -29,8 +27,8 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
    * [ diatom PID ][ DSCP_KILL ][ code ]
    *
    * DSCP_RESPONSE:
-   *       16              4              4         *
-   * [ diatom PID ][ DSCP_RESPONSE ][ enum info ][ data ]
+   *       16              8              8         *      *
+   * [ diatom PID ][ DSCP_RESPONSE ][ enum info ][ loc ][ data ]
    */
 
   va_list ptr;
@@ -44,7 +42,7 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
     case DSCP_START_PROCESS:
       char *pathname = va_arg(ptr, char*);
 
-      size = 3 + strlen(pathname) + 1; // +1 is null byte
+      size = 3 + strlen(pathname) + 1;
       buf = malloc(size);
 
       *buf = diatom_pid;
@@ -57,14 +55,6 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
 
       buf -= 3;
 
-      break;
-
-    case DSCP_START_FORK:
-      return -1; // NOT IMPLEMENTED
-      break;
-    case DSCP_START_THREAD:
-      return -1; // NOT IMPLEMENTED
-      break;
     case DSCP_KILL:
       uint8_t code = (uint8_t)va_arg(ptr, int);
 
@@ -83,21 +73,28 @@ int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...)
 
       break;
     case DSCP_RESPONSE:
-      uint8_t res = (uint8_t)va_arg(ptr, int);
-      char *data  = va_arg(ptr, char*);
+      uint8_t info = (uint8_t)va_arg(ptr, int);
+      char *loc    = va_arg(ptr, char*);
+      char *data   = va_arg(ptr, char*);
 
-      size = 3 + strlen(data) + 1; // +1 is null byte
+      size = 3 + strlen(data) + 1;
       buf = malloc(size);
 
       *buf = diatom_pid;
 
       buf += 2;
-      *buf = DSCP_RESPONSE & (res >> 4);
+      *buf = DSCP_RESPONSE;
+
+      buf++;
+      *buf = info;
+
+      buf++;
+      memcpy(buf, loc, strlen(loc) + 1);
 
       buf++;
       memcpy(buf, data, strlen(data) + 1);
 
-      buf -= 3;
+      buf -= (6 + strlen(loc) + strlen(data));
 
       break;
     default:

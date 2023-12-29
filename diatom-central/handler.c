@@ -1,29 +1,25 @@
 // handler.h
 // https://github.com/R-Rothrock/diatom
 
-#include<deps.h>
+#include "deps.h"
 
-struct node
+void *get_req()
 {
-  // data for other node
+  // TODO
 }
 
-struct send_data
+int send_req()
 {
-  // TODO stuff
+  // TODO
 }
 
-struct recv_data
+int handle_request(int sockfd)
 {
-  // TODO stuff
-}
+  void *buf = get_req();
 
-int send(struct send_data data, char *packet)
-{
-  // TODO stuff
-}
-
-struct recv_data await()
-{
-  // TODO stuff
+  enum dicp_req req_type = ident_dicp(buf);
+  switch(req_type)
+  {
+    // TODO
+  }
 }

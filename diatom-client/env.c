@@ -6,9 +6,9 @@
 #include<sys/ptrace.h>
 #include<unistd.h>
 
-#include<deps.h>
+#include "deps.h"
 
-pid_t start_process(char *argv[])
+pid_t start_process(char **argv, char **envp)
 {
   pid_t pid = fork();
 
@@ -18,7 +18,7 @@ pid_t start_process(char *argv[])
       return -1; // errno is set
     case 0:
       ptrace(PTRACE_TRACEME, 0, 0, 0);
-      execvp(argv[1], argv);
+      execve(argv[1], argv, envp);
   }
 
   waitpid(pid, 0, 0);
@@ -31,7 +31,6 @@ pid_t start_process(char *argv[])
 int handle_process_syscall(pid_t pid, int sockfd)
 {
   // utilizing PTRACE_SYSEMU saves us a context switch
-  // only two as opposed to the three if I used PTRACE_SYSCALL
   ptrace(PTRACE_SYSEMU, pid, 0, 0);
   waitpid(pid, 0, 0);
 
