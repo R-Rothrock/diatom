@@ -17,5 +17,7 @@ enum info
   INFO_STRUCT_IOVEC   // `struct iovec` for *(read|write)v*
   INFO_ACCESS         // access info
   INFO_PIPE           // pipe info
+  INFO_SELECT         // select info
+  INFO_TIME           // time info
   // TODO
 } __attribute__((__packed__));
