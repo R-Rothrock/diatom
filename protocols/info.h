@@ -4,7 +4,7 @@
 #ifndef INFO_H_
 #define INFO_H_
 
-// utilized for DICP_REQUEST_INFO and DSCP_RESPONSE
+// utilized for DICP_REQUEST_INFO, DICP_ALTER, and DSCP_RESPONSE
 enum info
 {
   INFO_FILE,          // files for I/O
