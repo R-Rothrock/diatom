@@ -7,8 +7,15 @@
 // utilized for DICP_REQUEST_INFO and DSCP_RESPONSE
 enum info
 {
-  INFO_FILE,    // files contents, socket contents, etc.
-  INFO_STAT,    // stat(2) data
-  INFO_INFO_PROCESS, // other process state NOT IMPLEMENTED
-  INFO_MEMORY,  // other process memory or registers NOT IMPLEMENTED
+  INFO_FILE,          // files for I/O
+  INFO_STRUCT_STAT,   // `struct stat` for *stat
+  INFO_STRUCT_POLLFD, // `struct pollfd` for poll
+  INFO_SIGACTION      // sigaction info
+  INFO_SIGPROCMASK    // sigprocmask info
+  INFO_SIGRETURN      // sigreturn info
+  INFO_IOCTL          // ioctl info
+  INFO_STRUCT_IOVEC   // `struct iovec` for *(read|write)v*
+  INFO_ACCESS         // access info
+  INFO_PIPE           // pipe info
+  // TODO
 } __attribute__((__packed__));
