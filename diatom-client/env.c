@@ -232,7 +232,7 @@ int handle_process_syscall(pid_t pid, int sockfd)
       case SYS_UMASK:
         // TODO
       case SYS_GETTIMEOFDAY:
-        // TODO fyi this syscall doesn't context switch
+        // TODO
       case SYS_GETRLIMIT:
         // TODO
       case SYS_GETRUSAGE:
