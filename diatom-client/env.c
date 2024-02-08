@@ -53,6 +53,9 @@ int handle_process_syscall(pid_t pid, int sockfd)
      *
      * kernel:
      *   create_module, init_module, delete_module
+     *
+     * debugging:
+     *   ptrace, process_vm_readv, process_vm_writev
      */
 
     #define DENIED regs.rax = -1;
@@ -252,7 +255,7 @@ int handle_process_syscall(pid_t pid, int sockfd)
       case SYS_TIMES:
         // TODO
       case SYS_PTRACE:
-        // TODO
+        DENIED
       case SYS_GETUID:
         // TODO
       case SYS_SYSLOG:
@@ -646,9 +649,9 @@ int handle_process_syscall(pid_t pid, int sockfd)
       case SYS_GETCPU:
         // TODO
       case SYS_PROCESS_VM_READY:
-        // TODO
+        DENIED
       case SYS_PROCESS_VM_WRITEV:
-        // TODO
+        DENIED
       case SYS_KCMP:
         // TODO
       case SYS_FINIT_MODULE:
