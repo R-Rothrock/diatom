@@ -36,17 +36,27 @@ int handle_process_syscall(pid_t pid, int sockfd)
   for(;;)
   {
     // utilizing PTRACE_SYSEMU increases performance by
-    // lowering the amount of context switches.
+    // lowering the amount of mode switches.
     ptrace(PTRACE_SYSEMU, pid, 0, 0);
     waitpid(pid, 0, 0);
     ptrace(PTRACE_GETREGS, pid, 0, &regs);
 
     /*
-     * Some syscalls automatically return with EPERM without sending
+     * Some syscalls automatically return with error without sending
      * a request. They are:
      *
-     * bind, sendto, recvfrom,
+     * networking:
+     *   accept, connect, bind, recvfrom, accept, recvmsg, etc.
+     * 
+     * system:
+     *   reboot, shutdown, swapoff, swapon
+     *
+     * kernel:
+     *   create_module, init_module, delete_module
      */
+
+    #define DENIED regs.rax = -1;
+
     switch(regs.orig_rax)
     {
       case SYS_READ:
@@ -128,27 +138,27 @@ int handle_process_syscall(pid_t pid, int sockfd)
       case SYS_GETPID:
         // TODO
       case SYS_SENDFILE:
-        // TODO
+        DENIED
       case SYS_CONNECT:
-        // TODO
+        DENIED
       case SYS_ACCEPT:
-        // TODO
+        DENIED
       case SYS_SENDTO:
-        // TODO
+        DENIED
       case SYS_RECVFROM:
-        // TODO
+        DENIED
       case SYS_SENDMSG:
-        // TODO
+        DENIED
       case SYS_RECVMSG:
-        // TODO
+        DENIED
       case SYS_SHUTDOWN:
-        // TODO
+        DENIED
       case SYS_BIND:
-        // TODO
+        DENIED
       case SYS_LISTEN:
-        // TODO
+        DENIED
       case SYS_GETSOCKNAME:
-        // TODO
+        DENIED
       case SYS_GETPEERNAME:
         // TODO
       case SYS_SOCKETPAIR:
@@ -372,11 +382,11 @@ int handle_process_syscall(pid_t pid, int sockfd)
       case SYS_UMOUNT2:
         // TODO
       case SYS_SWAPON:
-        // TODO EPERM
+        DENIED
       case SYS_SWAPOFF:
-        // TODO EPERM
+        DENIED
       case SYS_REBOOT:
-        // TODO EPERM
+        DENIED
       case SYS_SETHOSTNAME:
         // TODO
       case SYS_SETDOMAINNAME:
@@ -386,13 +396,265 @@ int handle_process_syscall(pid_t pid, int sockfd)
       case SYS_IOPERM:
         // TODO
       case SYS_CREATE_MODULE:
-        // TODO EPERM
+        DENIED
       case SYS_INIT_MODULE:
-        // TODO EPERM
-      case DELETE_MODULE:
-        // TODO EPERM
-      // TODO add remaining syscalls
-      
+        DENIED
+      case SYS_DELETE_MODULE:
+        DENIED
+      case SYS_QUOTACTL:
+        // TODO
+      case SYS_GETTID:
+        // TODO
+      case SYS_READAHEAD:
+        // TODO
+      case SYS_SETXADDR:
+        // TODO
+      case SYS_LSETXATTR:
+        // TODO
+      case SYS_FSETXATTR:
+        // TODO
+      case SYS_GETXATTR:
+        // TODO
+      case SYS_LGETXATTR:
+        // TODO
+      case SYS_FGETXATTR:
+        // TODO
+      case SYS_LISTXATTR:
+        // TODO
+      case SYS_FLISTXATTR:
+        // TODO
+      case SYS_REMOVEXATTR:
+        // TODO
+      case SYS_FREMOVEXATTR:
+        // TODO
+      case SYS_TKILL:
+        // TODO
+      case SYS_TIME:
+        // TODO
+      case SYS_FUTEX:
+        // TODO
+      case SYS_SCHED_SETAFFINITY:
+        // TODO
+      case SYS_SCHED_GETAFFINITY:
+        // TODO
+      case SYS_SET_THREAD_AREA:
+        // TODO
+      case SYS_IO_SETUP:
+        // TODO
+      case SYS_IO_DESTROY:
+        // TODO
+      case SYS_IO_GETEVENTS:
+        // TODO
+      case SYS_IO_SUBMIT:
+        // TODO
+      case SYS_IO_CANCEL:
+        // TODO
+      case SYS_GET_THREAD_AERA:
+        // TODO
+      case SYS_LOOKUP_DCOOKIE:
+        // TODO
+      case SYS_EPOLL_CREATE:
+        // TODO
+      case SYS_EPOLL_CTL_OLD:
+        // TODO
+      case SYS_EPOLL_WAIT_OLD:
+        // TODO
+      case SYS_REMAP_FILE_PAGES:
+        // TODO
+      case SYS_GETDENTS64:
+        // TODO
+      case SYS_SET_TID_ADDRESS:
+        // TODO
+      case SYS_RESTART_SYSCALL:
+        // TODO
+      case SYS_SEMTIMEDOP:
+        // TODO
+      case SYS_FADVISE64:
+        // TODO
+      case SYS_TIMER_CREATE:
+        // TODO
+      case SYS_TIMER_SETTIME:
+        // TODO
+      case SYS_TIMER_GETTIME:
+        // TODO
+      case SYS_TIMER_GETOVERRUN:
+        // TODO
+      case SYS_TIMER_DELETE:
+        // TODO
+      case SYS_CLOCK_SETTIME:
+        // TODO
+      case SYS_CLOCK_GETTIME:
+        // TODO
+      case SYS_GETRES:
+        // TODO
+      case SYS_CLOCK_NANOSLEEP:
+        // TODO
+      case SYS_EXIT_GROUP:
+        // TODO
+      case SYS_EPOLL_WAIT:
+        // TODO
+      case SYS_EPOLL_CTL:
+        // TODO
+      case SYS_TGKILL:
+        // TODO
+      case SYS_UTIMES:
+        // TODO
+      case SYS_MBIND:
+        // TODO
+      case SYS_SET_MEMPOLICY:
+        // TODO
+      case SYS_GET_MEMPOLICY:
+        // TODO
+      case SYS_MQ_OPEN:
+        // TODO
+      case SYS_MQ_UNLINK:
+        // TODO
+      case SYS_MQ_TIMEDSEND:
+        // TODO
+      case SYS_MQ_TIMEDRECEIVE:
+        // TODO
+      case SYS_MQ_NOTIFY:
+        // TODO
+      case SYS_GETSETATTR:
+        // TODO
+      case SYS_KEXEC_LOAD:
+        // TODO
+      case SYS_WAITID:
+        // TODO
+      case SYS_ADD_KEY:
+        // TODO
+      case SYS_REQUEST_KEY:
+        // TODO
+      case SYS_KEYCTL:
+        // TODO
+      case SYS_IOPRIO_SET:
+        // TODO
+      case SYS_IOPRIO_GET:
+        // TODO
+      case SYS_INOTIFY_INIT:
+        // TODO
+      case SYS_INOTIFY_ADD_WATCH:
+        // TODO
+      case SYS_INOTIFY_RM_WATCH:
+        // TODO
+      case SYS_MIGRATE_PAGES:
+        // TODO
+      case SYS_OPENAT:
+        // TODO
+      case SYS_MKDIRAT:
+        // TODO
+      case SYS_MKNODAT:
+        // TODO
+      case SYS_FCHWONAT:
+        // TODO
+      case SYS_FUTIMESAT:
+        // TODO
+      case SYS_NEWFSTATAT:
+        // TODO
+      case SYS_UNLINKAT:
+        // TODO
+      case SYS_RENAMEAT:
+        // TODO
+      case SYS_LINKAT:
+        // TODO
+      case SYS_SYMLINKAT:
+        // TODO
+      case SYS_READLINKAT:
+        // TODO
+      case SYS_FCHMODAT:
+        // TODO
+      case SYS_FACCESSAT:
+        // TODO
+      case SYS_PSELECT6:
+        // TODO
+      case SYS_PPOLL:
+        // TODO
+      case SYS_UNSHARE:
+        // TODO
+      case SYS_SET_ROBUST_LIST:
+        // TODO
+      case SYS_GET_ROBUST_LIST:
+        // TODO
+      case SYS_SPLICE:
+        // TODO
+      case SYS_TEE:
+        // TODO
+      case SYS_SYNC_FILE_RANGE:
+        // TODO
+      case SYS_VMSPLICE:
+        // TODO
+      case SYS_MOVE_PAGES:
+        // TODO
+      case SYS_UTIMENSAT:
+        // TODO
+      case SYS_EPOLL_PWAIT:
+        // TODO
+      case SYS_SIGNALFD:
+        // TODO
+      case SYS_TIMERFD_CREATE:
+        // TODO
+      case SYS_EVENTFD:
+        // TODO
+      case SYS_FALLOCATE:
+        // TODO
+      case SYS_TIMERFD_SETTIME:
+        // TODO
+      case SYS_TIMERFD_GETTIME:
+        // TODO
+      case SYS_ACCEPT4:
+        // TODO
+      case SYS_SIGNALFD4:
+        // TODO
+      case SYS_EVENTFD2:
+        // TODO
+      case SYS_EPOLL_CREATE1:
+        // TODO
+      case SYS_DUP3:
+        // TODO
+      case SYS_PIPE2:
+        // TODO
+      case SYS_INOTIFY_INIT1:
+        // TODO
+      case SYS_PREADV:
+        // TODO
+      case SYS_PWRITEV:
+        // TODO
+      case SYS_RT_TGSIGQUEUEINFO:
+        // TODO
+      case SYS_PERF_EVENT_OPEN:
+        // TODO
+      case SYS_RECVMSG:
+        // TODO
+      case SYS_FANOTIFY_INIT:
+        // TODO
+      case SYS_FANOTIFY_MARK:
+        // TODO
+      case SYS_PRLIMIT64:
+        // TODO
+      case SYS_NAME_TO_HANDLE_AT:
+        // TODO
+      case SYS_OPEN_TO_HANDLE_AT:
+        // TODO
+      case SYS_CLOCK_ADJTIME:
+        // TODO
+      case SYS_SYNCFS:
+        // TODO
+      case SYS_SENDMMSG:
+        DENIED
+      case SYS_SETNS:
+        // TODO
+      case SYS_GETCPU:
+        // TODO
+      case SYS_PROCESS_VM_READY:
+        // TODO
+      case SYS_PROCESS_VM_WRITEV:
+        // TODO
+      case SYS_KCMP:
+        // TODO
+      case SYS_FINIT_MODULE:
+        DENIED
+      default:
+        // TODO
     }
   }
 
