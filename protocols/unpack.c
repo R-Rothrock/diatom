@@ -89,6 +89,8 @@ enum dscp_req ident_dscp(void *buf)
 
 struct dicp_killed unpack_dicp_killed(void *buf)
 {
+  buf += 8; // skip buffer size
+
   struct dicp_killed ret;
 
   ret.diatom_pid = *((uint16_t*)buf);
@@ -102,6 +104,8 @@ struct dicp_killed unpack_dicp_killed(void *buf)
 
 struct dicp_request_info unpack_dicp_request_info(void *buf)
 {
+  buf += 8; // skip buffer size
+
   struct dicp_request_info ret;
 
   ret.diatom_pid = *((uint16_t*)buf);
@@ -122,6 +126,8 @@ struct dicp_request_info unpack_dicp_request_info(void *buf)
 
 struct dscp_start_process unpack_dscp_start_process(void *buf)
 {
+  buf += 8; // skip buffer size
+
   struct dscp_start_process ret;
 
   ret.diatom_pid = *((uint16_t*)buf);
@@ -138,6 +144,8 @@ struct dscp_start_process unpack_dscp_start_process(void *buf)
 
 struct dscp_kill unpack_dscp_kill(void *buf)
 {
+  buf += 8; // skip buffer size
+
   struct dscp_kill ret;
 
   ret.diatom_pid = *((uint16_t*)buf);
@@ -151,6 +159,8 @@ struct dscp_kill unpack_dscp_kill(void *buf)
 
 struct dscp_response unpack_dscp_response(void *buf)
 {
+  buf += 8; // skip buffer size
+
   struct dscp_response ret;
 
   ret.diatom_pid = *((uint16_t*)buf);

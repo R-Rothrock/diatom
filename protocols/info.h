@@ -7,17 +7,8 @@
 // utilized for DICP_REQUEST_INFO, DICP_ALTER, and DSCP_RESPONSE
 enum info
 {
-  INFO_FILE,          // files for I/O
-  INFO_STRUCT_STAT,   // `struct stat` for *stat
-  INFO_STRUCT_POLLFD, // `struct pollfd` for poll
-  INFO_SIGACTION      // sigaction info
-  INFO_SIGPROCMASK    // sigprocmask info
-  INFO_SIGRETURN      // sigreturn info
-  INFO_IOCTL          // ioctl info
-  INFO_STRUCT_IOVEC   // `struct iovec` for *(read|write)v*
-  INFO_ACCESS         // access info
-  INFO_PIPE           // pipe info
-  INFO_SELECT         // select info
-  INFO_TIME           // time info
+  INFO_FILE, // file sharing
+  INFO_STAT, // file stat sharing
+  INFO_POLL, // poll data sharing
   // TODO
 } __attribute__((__packed__));
