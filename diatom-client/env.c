@@ -58,7 +58,9 @@ int handle_process_syscall(pid_t pid, int sockfd)
      *   ptrace, process_vm_readv, process_vm_writev
      */
 
-    #define DENIED regs.rax = -1;
+    #define DENIED {regs.rax = -1;}
+    #define NOT_IMPLEMENTED {regs.rax = -1;}
+
 
     switch(regs.orig_rax)
     {
