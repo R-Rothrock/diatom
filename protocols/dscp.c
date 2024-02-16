@@ -42,13 +42,13 @@ void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
     size = 11 + strlen(pathname) + 1;
     buf = malloc(size);
 
-    *(uint64_t*)buf = size;
+    *(uint64_t *)buf = size;
 
     buf += 8;
-    *(uint8_t*)buf = diatom_pid;
+    *(uint8_t *)buf = diatom_pid;
 
     buf += 2;
-    *(uint8_t*)buf = DSCP_RESPONSE;
+    *(uint8_t *)buf = DSCP_RESPONSE;
 
     buf++;
     memcpy(buf, pathname, strlen(pathname) + 1);
@@ -61,16 +61,16 @@ void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
     size = 12;
     buf = malloc(size);
 
-    *(uint64_t*)buf = size;
+    *(uint64_t *)buf = size;
 
     buf += 8;
-    *(uint8_t*)buf = diatom_pid;
+    *(uint8_t *)buf = diatom_pid;
 
     buf += 2;
-    *(uint8_t*)buf = DSCP_KILL;
+    *(uint8_t *)buf = DSCP_KILL;
 
     buf++;
-    *(uint8_t*)buf = code;
+    *(uint8_t *)buf = code;
 
     buf -= 11;
 
@@ -83,16 +83,16 @@ void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
     size = 11 + strlen(loc) + strlen(data) + 2;
     buf = malloc(size);
 
-    *(uint64_t*)buf = size;
+    *(uint64_t *)buf = size;
 
     buf += 8;
-    *(uint8_t*)buf = diatom_pid;
+    *(uint8_t *)buf = diatom_pid;
 
     buf += 2;
-    *(uint8_t*)buf = DSCP_RESPONSE;
+    *(uint8_t *)buf = DSCP_RESPONSE;
 
     buf++;
-    *(uint8_t*)buf = info;
+    *(uint8_t *)buf = info;
 
     buf++;
     memcpy(buf, loc, strlen(loc) + 1);

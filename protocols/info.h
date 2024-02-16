@@ -13,4 +13,3 @@ enum info {
 } __attribute__((__packed__));
 
 #endif /* INFO_H_ */
-

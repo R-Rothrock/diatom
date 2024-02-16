@@ -5,7 +5,7 @@
 #ifndef DEPS_H_
 #define DEPS_H_
 
-#include<stdint.h>
+#include <stdint.h>
 
 // protocols/dicp.h
 #define DSCP_PORT 12036

@@ -11,7 +11,7 @@
 #define DICP_PORT 12036
 
 enum dicp_req;
-//enum dicp_res;
+// enum dicp_res;
 
 void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...);
 

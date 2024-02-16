@@ -5,13 +5,12 @@
 #ifndef DEPS_H_
 #define DEPS_H_
 
-#include<stdint.h>
+#include <stdint.h>
 
 // protocols/dscp.h
 #define DSCP_PORT 12036
 extern enum dscp_req;
 extern int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...);
-
 
 // protocols/unpack.h
 extern enum dicp_req;
@@ -19,7 +18,7 @@ extern enum dicp_res;
 
 extern struct dicp_killed;
 extern struct dicp_request_info;
-extern struct dicp_fork; // NOT IMPLEMENTED
+extern struct dicp_fork;   // NOT IMPLEMENTED
 extern struct dicp_thread; // NOT IMPLEMENTED
 
 extern enum dicp_req ident_dicp(void *buf);
