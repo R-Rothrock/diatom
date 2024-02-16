@@ -5,7 +5,7 @@ all: dicp.o dscp.o unpack.o bin
 	mv dicp.o dscp.o unpack.o bin
 
 dicp.o:
-	gcc -c dicp.c -o dicp.o
+	gcc -c dicp.c -o dicp.o | wc -l
 
 dscp.o:
 	gcc -c dscp.c -o dscp.o

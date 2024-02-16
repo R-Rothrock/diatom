@@ -4,14 +4,14 @@
 #ifndef DSCP_H_
 #define DSCP_H_
 
-#include<stdint.h>
+#include <stdint.h>
 
-#include<info.h>
+#include "info.h"
 
 #define DSCP_PORT 12036
 
 enum dscp_req;
 
-int dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...);
+void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...);
 
 #endif /* DSCP_H_ */
