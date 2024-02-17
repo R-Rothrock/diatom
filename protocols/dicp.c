@@ -21,7 +21,7 @@ void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...) {
    *
    * DICP_REQUEST_INFO:
    *       64             16                8                8         *
-   * [ packet size ][ diatom PID ][ DICP_REQUEST_INFO ][ enum info ][ data ]
+   * [ packet size ][ diatom PID ][ DICP_REQUEST_INFO ][ enum info ][ loc ]
    *
    * DICP_ALTER:
    *       64             16            8             8         *      *
@@ -35,7 +35,7 @@ void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...) {
   uint64_t size;
 
   switch (req) {
-  case DICP_KILLED:
+  case DICP_KILLED: {
     uint8_t code = (uint8_t)va_arg(ptr, int);
 
     size = 20;
@@ -53,12 +53,12 @@ void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...) {
     *(uint8_t *)buf = code;
 
     buf -= 11;
-
-  case DICP_REQUEST_INFO:
+  }
+  case DICP_REQUEST_INFO: {
     uint8_t info = (uint8_t)va_arg(ptr, int);
     char *loc = va_arg(ptr, char *);
 
-    size = 11 + strlen(data) + 1;
+    size = 11 + strlen(loc) + 1;
     buf = malloc(size);
 
     *(uint64_t *)buf = size;
@@ -76,8 +76,8 @@ void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...) {
     memcpy(buf, loc, strlen(loc) + 1);
 
     buf -= 11;
-
-  case DICP_ALTER:
+  }
+  case DICP_ALTER: {
     uint8_t info = (uint8_t)va_arg(ptr, int);
     char *loc = va_arg(ptr, char *);
     char *data = va_arg(ptr, char *);
@@ -103,9 +103,10 @@ void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...) {
     memcpy(buf, data, strlen(data) + 1);
 
     buf -= (14 + strlen(loc) + strlen(data));
-
-  default:
+  }
+  default: {
     return (void *)0;
+  }
   }
 
   va_end(ptr);

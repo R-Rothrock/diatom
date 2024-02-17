@@ -36,7 +36,7 @@ void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
   uint64_t size;
 
   switch (req) {
-  case DSCP_START_PROCESS:
+  case DSCP_START_PROCESS: {
     char *pathname = va_arg(ptr, char *);
 
     size = 11 + strlen(pathname) + 1;
@@ -54,8 +54,8 @@ void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
     memcpy(buf, pathname, strlen(pathname) + 1);
 
     buf -= 11;
-
-  case DSCP_KILL:
+  }
+  case DSCP_KILL: {
     uint8_t code = (uint8_t)va_arg(ptr, int);
 
     size = 12;
@@ -73,9 +73,8 @@ void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
     *(uint8_t *)buf = code;
 
     buf -= 11;
-
-    break;
-  case DSCP_RESPONSE:
+  }
+  case DSCP_RESPONSE: {
     uint8_t info = (uint8_t)va_arg(ptr, int);
     char *loc = va_arg(ptr, char *);
     char *data = va_arg(ptr, char *);
@@ -101,11 +100,10 @@ void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
     memcpy(buf, data, strlen(data) + 1);
 
     buf -= (12 + strlen(loc));
-
-    break;
-  default:
-    return -1;
-    break;
+  }
+  default: {
+    return (void *)0;
+  }
   }
 
   va_end(ptr);
