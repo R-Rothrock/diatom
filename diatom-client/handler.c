@@ -5,16 +5,22 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 
-#include <data.h> /* get_central_ip */
-#include <deps.h> /* dscp_port */
+#include "data.h" /* get_central_ip */
+#include "deps.h" /* dscp_port */
 
 static int SOCKFD;
 static struct sockaddr_in SERVER_ADDR;
 
 int handler_init() {
+#define CATCH(x)                                                               \
+  {                                                                            \
+    if (!x)                                                                    \
+      return -1;                                                               \
+  }
   /* 0 on success, -1 on error. */
 
   SOCKFD = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  CATCH(SOCKFD);
 
   SERVER_ADDR.sin_family = AF_INET;
   SERVER_ADDR.sin_port = htons(2000);
@@ -22,7 +28,9 @@ int handler_init() {
 }
 
 int sendto_central(void *packet) {
-  // TODO
+  struct sockaddr *servaddr = (struct sockaddr *)&SERVER_ADDR;
+  return sendto(SOCKFD, packet, sizeof(packet), 0, (struct sockaddr *)&servaddr,
+                sizeof(&servaddr));
 }
 
 void *recvfrom_central() {

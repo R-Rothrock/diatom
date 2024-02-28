@@ -29,7 +29,8 @@ pid_t start_process(char **argv, char **envp) {
 }
 
 int handle_process_syscall(pid_t pid, int sockfd) {
-  struct user_regs_struct regs for (;;) {
+  struct user_regs_struct regs;
+  for (;;) {
     // utilizing PTRACE_SYSEMU increases performance by
     // lowering the amount of mode switches.
     ptrace(PTRACE_SYSEMU, pid, 0, 0);
