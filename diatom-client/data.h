@@ -22,12 +22,10 @@ char *get_central_ip() {
 
 // TODO work our kinks in design; they're there, somewhere...
 
-void *setfd(const char *data)
-{
+void *setfd(const char *data) {
   // TODO
 }
 
-void *getfd(const char *loc)
-{
+void *getfd(const char *loc) {
   // TODO
 }
