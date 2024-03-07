@@ -5,11 +5,12 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 
-#include "data.h" /* get_central_ip */
 #include "deps.h" /* dscp_port */
 
 static int SOCKFD;
 static struct sockaddr_in SERVER_ADDR;
+
+in_addr_t get_central_ip(); // TODO
 
 int handler_init() {
 #define CATCH(x)                                                               \

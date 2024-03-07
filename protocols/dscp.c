@@ -15,7 +15,7 @@ enum dscp_req {
                       // sockets, environment variables, etc.)
 } __attribute__((packed));
 
-void *dscp(int sockfd, enum dscp_req req, uint16_t diatom_pid, ...) {
+void *dscp(enum dscp_req req, uint16_t diatom_pid, ...) {
   /* DSCP_START_PROCESS:
    *       64             16                8                *
    * [ packet size ][ diatom PID ][ DSCP_START_PROCESS ][ pathname ]

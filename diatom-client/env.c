@@ -8,7 +8,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "data.h"
 #include "deps.h"
+#include "fds.c"
+#include "handler.c" 
 
 pid_t start_process(char **argv, char **envp) {
   pid_t pid = fork();
@@ -28,8 +31,23 @@ pid_t start_process(char **argv, char **envp) {
   return pid;
 }
 
-int handle_process_syscall(pid_t pid, int sockfd) {
+int handle_process_syscall(pid_t pid, pid_t diatom_pid) {
   struct user_regs_struct regs;
+
+  const char *tmp_path = get_tmp_path();
+
+  enum arg_regs {
+    RDI,
+    RSI,
+    RDX,
+    R8,
+    R9
+  }
+
+  char *get_str_arg(enum ARG_REGS arg_register); // TODO
+  int  *get_int_arg(enum ARG_REGS arg_register); // TODO
+  // TODO more of these
+
   for (;;) {
     // utilizing PTRACE_SYSEMU increases performance by
     // lowering the amount of mode switches.
@@ -61,11 +79,34 @@ int handle_process_syscall(pid_t pid, int sockfd) {
 
     switch (regs.orig_rax) {
     case SYS_READ:
+
+      int fd = &get_int_arg(RDI); 
+      void *proto_buf = dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, getfd(fd));
+      
+      sendto_central(proto_buf);
+      
+      free(proto_buf);
+
       // TODO
+
     case SYS_WRITE:
       // TODO
     case SYS_OPEN:
+      // setting the file descriptor
+      char *tmp_buf = malloc(512);
+      char *tmp_buf2 = malloc(512);
+      char *path = get_str_arg(RDI);
+
+      strcpy(tmp_buf2, path);
+      strcat(tmp_buf2, tmp_path);
+
+      sprintf(tmp_buf, "type:file;path:%s;realpath:%s;", path, tmp_buf2);
+      setfd(nextfd(), tmp_buf);
+      free(tmp_buf);
+      free(tmp_buf2);
       // TODO
+      // this is my half-baked idea for how this goes. 
+      
     case SYS_CLOSE:
       // TODO
     case SYS_STAT:
