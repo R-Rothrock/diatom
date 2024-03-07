@@ -34,6 +34,6 @@ int sendto_central(void *packet) {
                 sizeof(&servaddr));
 }
 
-void *recvfrom_central() {
+void *recvfrom_central(void) {
   // TODO
 }

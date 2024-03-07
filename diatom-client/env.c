@@ -31,18 +31,18 @@ pid_t start_process(char **argv, char **envp) {
   return pid;
 }
 
-int handle_process_syscall(pid_t pid, pid_t diatom_pid) {
+enum arg_regs {
+  REGS_RDI,
+  REGS_RSI,
+  REGS_RDX,
+  REGS_R8,
+  REGS_R9,
+}
+
+int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
   struct user_regs_struct regs;
 
   const char *tmp_path = get_tmp_path();
-
-  enum arg_regs {
-    RDI,
-    RSI,
-    RDX,
-    R8,
-    R9
-  }
 
   char *get_str_arg(enum ARG_REGS arg_register); // TODO
   int  *get_int_arg(enum ARG_REGS arg_register); // TODO
@@ -73,9 +73,11 @@ int handle_process_syscall(pid_t pid, pid_t diatom_pid) {
      */
 
 #define DENIED                                                                 \
-  { regs.rax = -1; }
+  { regs.rax = -1; goto skip;}
 #define NOT_IMPLEMENTED                                                        \
-  { regs.rax = -1; }
+  { regs.rax = -1; goto skip;}
+#define ERROR                                                                  \
+  { regs.rax = -1; goto skip;}
 
     switch (regs.orig_rax) {
     case SYS_READ:
@@ -92,21 +94,47 @@ int handle_process_syscall(pid_t pid, pid_t diatom_pid) {
     case SYS_WRITE:
       // TODO
     case SYS_OPEN:
-      // setting the file descriptor
-      char *tmp_buf = malloc(512);
-      char *tmp_buf2 = malloc(512);
-      char *path = get_str_arg(RDI);
-
-      strcpy(tmp_buf2, path);
-      strcat(tmp_buf2, tmp_path);
-
-      sprintf(tmp_buf, "type:file;path:%s;realpath:%s;", path, tmp_buf2);
-      setfd(nextfd(), tmp_buf);
-      free(tmp_buf);
-      free(tmp_buf2);
-      // TODO
       // this is my half-baked idea for how this goes. 
+     
+      // setting the new file descriptor
+      struct fd newfd;
+      newfd.type    = FD_TYPE_FILE;
+      newfd.loc     = get_str_arg(RDI);
+      newfd.realloc = tmp_path;
+
+      {
+        void *proto_buf = dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, newfd.loc);
+        sendto_central(proto_buf);
+        free(proto_buf);
+      }
+
+      {
+        void *proto_buf = recvfrom_central();
+
+        // expecting DSCP_RESPONSE with matching diatom PID and INFO_FILE,
+        // along with a path matching the one given, and, of course, data.
       
+        if(ident_dscp(proto_buf) != DSCP_RESPONSE) {
+          ERROR;
+        }
+
+        struct dscp_response unpacked = unpack_dscp_response(proto_buf);
+      
+        if(unpacked.diatom_pid != diatom_pid) {
+          ERROR;
+        } else
+        if(unpacked.info != INFO_FILE) {
+          ERROR;
+        } else
+        if(unpacked.loc != newfd.loc) {
+          ERROR;
+        }
+        
+        // writing received data to file `newfd.realloc + newfd.loc`
+        // TODO
+
+      }
+
     case SYS_CLOSE:
       // TODO
     case SYS_STAT:
@@ -698,9 +726,8 @@ int handle_process_syscall(pid_t pid, pid_t diatom_pid) {
     default:
       // TODO
     }
+    skip:
+    ptrace(PTRACE_SETREGS, pid, 0, &regs);
   }
-
-  ptrace(PTRACE_SETREGS, pid, 0, &regs);
-
   return 0;
 }
