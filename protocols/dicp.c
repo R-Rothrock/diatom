@@ -14,7 +14,7 @@ enum dicp_req {
   DICP_ALTER               // alter files, permissions, etc.
 } __attribute__((packed)); // all values are uint8_t
 
-void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...) {
+void *dicp(enum dicp_req req, uint16_t diatom_pid, ...) {
   /* DICP_KILLED:
    *       64             16             8          8
    * [ packet size ][ diatom PID ][ DICP_KILLED ][ code ]
@@ -58,7 +58,7 @@ void *dicp(int sockfd, enum dicp_req req, uint16_t diatom_pid, ...) {
     uint8_t info = (uint8_t)va_arg(ptr, int);
     char *loc = va_arg(ptr, char *);
 
-    size = 11 + strlen(loc) + 1;
+    size = 1 + strlen(loc) + 1;
     buf = malloc(size);
 
     *(uint64_t *)buf = size;

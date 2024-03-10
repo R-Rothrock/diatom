@@ -8,7 +8,6 @@
 #define ANSI_GREEN "\033[32m"
 #define ANSI_RED "\033[31m"
 #define ANSI_YELLOW "\033[33m"
-
 #define ANSI_RESET "\033[39m"
 
 #define MESSAGE_PRE "[" ANSI_BLUE "%s" ANSI_RESET "]["

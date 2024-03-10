@@ -63,15 +63,16 @@ struct dscp_kill {
 struct dscp_response {
   uint16_t diatom_pid;
   enum info info;
+  char *loc;
   char *data;
 };
 
 enum dicp_req ident_dicp(void *buf) {
-  return *((enum dicp_req *)buf + 2); // +2 to skip Diatom PID
+  return *((enum dicp_req *)buf + 10); // +10 to skip Diatom PID and packet size
 }
 
 enum dscp_req ident_dscp(void *buf) {
-  return *((enum dicp_req *)buf + 2); // +2 to skip Diatom PID
+  return *((enum dicp_req *)buf + 10); // +10 to skip Diatom PID and packet size
 }
 
 struct dicp_killed unpack_dicp_killed(void *buf) {
