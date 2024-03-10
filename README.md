@@ -5,6 +5,15 @@ one "central" computer on another "client" computer when imitating the
 central computer's environment. This is accomplished with unencrypted
 UDP communication and ptrace-based syscall emulation.
 
+### Status
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/R-Rothrock/diatom)
+![GitHub last commit](https://img.shields.io/github/last-commit/R-Rothrock/diatom?color=blue)<br>
+![GitHub Repo stars](https://img.shields.io/github/stars/R-Rothrock/diatom?style=flat&color=green)
+![GitHub watchers](https://img.shields.io/github/watchers/R-Rothrock/diatom?style=flat&color=green)<br>
+![GitHub language count](https://img.shields.io/github/languages/count/R-Rothrock/diatom?color=red)
+![GitHub top language](https://img.shields.io/github/languages/top/R-Rothrock/diatom?color=red)
+
+
 ## Installation
 
 Can't say.
