@@ -2,13 +2,16 @@
 // handling file descriptiors
 
 // okay, so this is going to have to have a sort of database system
-// preferably in memory. How? No idea!
+// preferably in memory.
+// How?
+// We shall simply ("simply?" heh, no) use SQLite to create a
+// "transient in-memory database."
 
 
 enum fd_type {
   FD_TYPE_FILE,
   // TODO
-} __attribute__((PACKED));
+} __attribute__((packed));
 
 struct fd {
   enum fd_type type;
@@ -16,16 +19,14 @@ struct fd {
   char *realloc;
 }
 
-struct fd` *getfd(int fd)
+struct fd *getfd(int fd)
 {
   // TODO
-  // I have literally no idea how this is going to work. 
 }
 
-void *setfd(int fd, const char *data)
+void *setfd(int fd, struct fd *data)
 {
   // TODO
-  // No idea about this one, either.
 }
 
 int *nextfd(void)
