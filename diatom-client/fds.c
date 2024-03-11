@@ -7,7 +7,6 @@
 // We shall simply ("simply?" heh, no) use SQLite to create a
 // "transient in-memory database."
 
-
 enum fd_type {
   FD_TYPE_FILE,
   // TODO
@@ -19,18 +18,15 @@ struct fd {
   char *realloc;
 }
 
-struct fd *getfd(int fd)
-{
+struct fd *
+getfd(int fd) {
   // TODO
 }
 
-void *setfd(int fd, struct fd *data)
-{
+void *setfd(int fd, struct fd *data) {
   // TODO
 }
 
-int *nextfd(void)
-{
+int *nextfd(void) {
   // TODO
 }
-

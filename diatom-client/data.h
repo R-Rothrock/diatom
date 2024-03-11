@@ -20,4 +20,3 @@ char *get_tmp_path() {
   /* Gets path for data storage
    */
   // TODO
-

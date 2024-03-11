@@ -11,7 +11,7 @@
 #include "data.h"
 #include "deps.h"
 #include "fds.c"
-#include "handler.c" 
+#include "handler.c"
 
 pid_t start_process(char **argv, char **envp) {
   pid_t pid = fork();
@@ -45,7 +45,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
   const char *tmp_path = get_tmp_path();
 
   char *get_str_arg(enum ARG_REGS arg_register); // TODO
-  int  *get_int_arg(enum ARG_REGS arg_register); // TODO
+  int *get_int_arg(enum ARG_REGS arg_register);  // TODO
   // TODO more of these
 
   for (;;) {
@@ -73,20 +73,30 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
      */
 
 #define DENIED                                                                 \
-  { regs.rax = -1; goto skip;}
+  {                                                                            \
+    regs.rax = -1;                                                             \
+    goto skip;                                                                 \
+  }
 #define NOT_IMPLEMENTED                                                        \
-  { regs.rax = -1; goto skip;}
+  {                                                                            \
+    regs.rax = -1;                                                             \
+    goto skip;                                                                 \
+  }
 #define ERROR                                                                  \
-  { regs.rax = -1; goto skip;}
+  {                                                                            \
+    regs.rax = -1;                                                             \
+    goto skip;                                                                 \
+  }
 
     switch (regs.orig_rax) {
     case SYS_READ:
 
-      int fd = &get_int_arg(RDI); 
-      void *proto_buf = dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, getfd(fd));
-      
+      int fd = &get_int_arg(RDI);
+      void *proto_buf =
+          dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, getfd(fd));
+
       sendto_central(proto_buf);
-      
+
       free(proto_buf);
 
       // TODO
@@ -94,16 +104,17 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_WRITE:
       // TODO
     case SYS_OPEN:
-      // this is my half-baked idea for how this goes. 
-     
+      // this is my half-baked idea for how this goes.
+
       // setting the new file descriptor
       struct fd newfd;
-      newfd.type    = FD_TYPE_FILE;
-      newfd.loc     = get_str_arg(RDI);
+      newfd.type = FD_TYPE_FILE;
+      newfd.loc = get_str_arg(RDI);
       newfd.realloc = tmp_path;
 
       {
-        void *proto_buf = dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, newfd.loc);
+        void *proto_buf =
+            dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, newfd.loc);
         sendto_central(proto_buf);
         free(proto_buf);
       }
@@ -113,26 +124,23 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
 
         // expecting DSCP_RESPONSE with matching diatom PID and INFO_FILE,
         // along with a path matching the one given, and, of course, data.
-      
-        if(ident_dscp(proto_buf) != DSCP_RESPONSE) {
+
+        if (ident_dscp(proto_buf) != DSCP_RESPONSE) {
           ERROR;
         }
 
         struct dscp_response unpacked = unpack_dscp_response(proto_buf);
-      
-        if(unpacked.diatom_pid != diatom_pid) {
+
+        if (unpacked.diatom_pid != diatom_pid) {
           ERROR;
-        } else
-        if(unpacked.info != INFO_FILE) {
+        } else if (unpacked.info != INFO_FILE) {
           ERROR;
-        } else
-        if(unpacked.loc != newfd.loc) {
+        } else if (unpacked.loc != newfd.loc) {
           ERROR;
         }
-        
+
         // writing received data to file `newfd.realloc + newfd.loc`
         // TODO
-
       }
 
     case SYS_CLOSE:
@@ -726,7 +734,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     default:
       // TODO
     }
-    skip:
+  skip:
     ptrace(PTRACE_SETREGS, pid, 0, &regs);
   }
   return 0;
