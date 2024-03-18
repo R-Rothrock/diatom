@@ -21,7 +21,7 @@ struct fd {
   char *realloc;
 }
 
-static sqlite *DB;
+static sqlite3 *DB;
 
 static char SQL_INIT_CMD[128] = "\
 CREATE TABLE fds (\
