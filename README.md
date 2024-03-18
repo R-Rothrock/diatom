@@ -14,8 +14,6 @@ UDP communication and ptrace-based syscall emulation.
 ![GitHub top language](https://img.shields.io/github/languages/top/R-Rothrock/diatom?color=red)<br>
 ![GitHub repo size](https://img.shields.io/github/repo-size/R-Rothrock/diatom?color=yellow)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/R-Rothrock/diatom?color=yellow)
-![Lines of code](https://img.shields.io/tokei/lines/github/R-Rothrock/diatom?color=yellow)
-
 
 ## Installation
 
