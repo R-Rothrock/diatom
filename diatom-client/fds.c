@@ -8,7 +8,7 @@
 // "transient in-memory database." In this database we will store the
 // data of the file descriptors.
 
-#include<sqlite.h>
+#include <sqlite.h>
 
 enum fd_type {
   FD_TYPE_FILE,
@@ -31,30 +31,27 @@ loc     TEXT NOT NULL,\
 realloc TEXT NOT NULL,\
 );"
 
-static char SQL_INSERT_CMD[64] = "\
+    static char SQL_INSERT_CMD[64] = "\
 INSERT INTO fds (id, type, loc, realloc)\
 VALUES (%s, %s, %s, %s);"
 
-static char SQL_FETCH_CMD[64] = "\
+    static char SQL_FETCH_CMD[64] = "\
 SELECT *\
 FROM fds\
 WHERE id = %s;"
 
-static char SQL_NEXTFD_CMD[32] = "\
+    static char SQL_NEXTFD_CMD[32] = "\
 SELECT MAX(id) FROM fds;
 
-
-
-int fds_init(void)
-{
+    int
+    fds_init(void) {
   /* run this before all other functions here */
-  
+
   int ret;
-  
+
   ret = sqlite3_open(":memory:", DB);
-  
-  if(ret != 0)
-  {
+
+  if (ret != 0) {
     return ret;
   }
 
@@ -74,6 +71,10 @@ struct fd *getfd(int fd) {
 }
 
 void *setfd(int fd, struct fd *data) {
+  // TODO
+}
+
+void *clsfs(int fd) {
   // TODO
 }
 

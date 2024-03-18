@@ -88,22 +88,18 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     goto skip;                                                                 \
   }
 
+#define SYSCALL_RETURN(x)                                                      \
+  {                                                                            \
+    regs.rax = x;                                                              \
+    goto skip;                                                                 \
+  }
+
     switch (regs.orig_rax) {
     case SYS_READ:
-
-      int fd = &get_int_arg(RDI);
-      void *proto_buf =
-          dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, getfd(fd));
-
-      sendto_central(proto_buf);
-
-      free(proto_buf);
-
       // TODO
-
     case SYS_WRITE:
       // TODO
-    case SYS_OPEN:
+    case SYS_OPEN: {
       // this is my half-baked idea for how this goes.
 
       // setting the new file descriptor
@@ -119,32 +115,34 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
         free(proto_buf);
       }
 
-      {
-        void *proto_buf = recvfrom_central();
+      struct dscp_response unpacked;
 
-        // expecting DSCP_RESPONSE with matching diatom PID and INFO_FILE,
-        // along with a path matching the one given, and, of course, data.
+      void *proto_buf = recvfrom_central();
 
-        if (ident_dscp(proto_buf) != DSCP_RESPONSE) {
-          ERROR;
-        }
+      // expecting DSCP_RESPONSE with matching diatom PID and INFO_FILE,
+      // along with a path matching the one given, and, of course, data.
 
-        struct dscp_response unpacked = unpack_dscp_response(proto_buf);
-
-        if (unpacked.diatom_pid != diatom_pid) {
-          ERROR;
-        } else if (unpacked.info != INFO_FILE) {
-          ERROR;
-        } else if (unpacked.loc != newfd.loc) {
-          ERROR;
-        }
-
-        // writing received data to file `newfd.realloc + newfd.loc`
-        // TODO
+      if (ident_dscp(proto_buf) != DSCP_RESPONSE) {
+        ERROR;
       }
 
-    case SYS_CLOSE:
+      struct dscp_response unpacked = unpack_dscp_response(proto_buf);
+
+      if (unpacked.diatom_pid != diatom_pid) {
+        ERROR;
+      } else if (unpacked.info != INFO_FILE) {
+        ERROR;
+      } else if (unpacked.loc != newfd.loc) {
+        ERROR;
+      }
+
+      // writing received data to file `newfd.realloc + newfd.loc`
       // TODO
+    }
+    case SYS_CLOSE: {
+      // TODO
+      clsfd(get_int_arg(RDI);
+    }
     case SYS_STAT:
       // TODO
     case SYS_FSTAT:
