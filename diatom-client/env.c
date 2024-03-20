@@ -105,8 +105,8 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // setting the new file descriptor
       struct fd newfd;
       newfd.type = FD_TYPE_FILE;
-      newfd.loc = get_str_arg(RDI);
-      newfd.realloc = tmp_path;
+      newfd.data_loc = get_str_arg(RDI);
+      newfd.data_realloc = tmp_path;
 
       {
         void *proto_buf =
@@ -140,8 +140,8 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // TODO
     }
     case SYS_CLOSE: {
-      // TODO
-      clsfd(get_int_arg(RDI);
+      // TODO delete locally stored file data
+      SYSCALL_RETURN(clsfd(get_int_arg(RDI));
     }
     case SYS_STAT:
       // TODO

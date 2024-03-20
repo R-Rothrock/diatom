@@ -17,8 +17,10 @@ enum fd_type {
 
 struct fd {
   enum fd_type type;
-  char *loc;
-  char *realloc;
+  int flags;
+  // TODO other usefull descriptive data here
+  char *data_loc;
+  char *data_realloc;
 }
 
 static sqlite3 *DB;
@@ -29,22 +31,25 @@ id      INTEGER PRIMARY KEY AUTOINCREMEMT NOT NULL,\
 type    TEXT NOT NULL,\
 loc     TEXT NOT NULL,\
 realloc TEXT NOT NULL,\
-);"
+);";
 
-    static char SQL_INSERT_CMD[64] = "\
+static char SQL_INSERT_CMD[] = "\
 INSERT INTO fds (id, type, loc, realloc)\
-VALUES (%s, %s, %s, %s);"
+VALUES (%s, %s, %s, %s);";
 
-    static char SQL_FETCH_CMD[64] = "\
+static char SQL_FETCH_CMD[] = "\
 SELECT *\
 FROM fds\
-WHERE id = %s;"
+WHERE id = %s;";
 
-    static char SQL_NEXTFD_CMD[32] = "\
-SELECT MAX(id) FROM fds;
+static char SQL_CLSFD_CMD[] = "\
+DELETE FROM fds\
+WHERE id = %s;";
 
-    int
-    fds_init(void) {
+static char SQL_NEXTFD_CMD[] = "\
+SELECT MAX(id) FROM fds;";
+
+int fds_init(void) {
   /* run this before all other functions here */
 
   int ret;
