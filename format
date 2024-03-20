@@ -1,0 +1,4 @@
+# run with `source format`
+# I find myself doing this a lot, so creating this file makes sense
+# to me for the time being
+clang-format -i */*.c */*.h
