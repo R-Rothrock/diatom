@@ -1,11 +1,7 @@
-# Diatom
+<p align="center">
+<img src="https://github.com/R-Rothrock/diatom/blob/881ab1e5a9d7fb9fd4965de808682f90cd5e5b69/assets/Logo_512x512.png" alt="Diatom Logo">
+</p>
 
-**Diatom** ~~is~~ _will be_ a program capable of running the program of
-one "central" computer on another "client" computer when imitating the
-central computer's environment. This is accomplished with unencrypted
-UDP communication and ptrace-based syscall emulation.
-
-### Status
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/R-Rothrock/diatom)
 ![GitHub last commit](https://img.shields.io/github/last-commit/R-Rothrock/diatom?color=blue)<br>
 ![GitHub Repo stars](https://img.shields.io/github/stars/R-Rothrock/diatom?style=flat&color=green)
@@ -14,6 +10,13 @@ UDP communication and ptrace-based syscall emulation.
 ![GitHub top language](https://img.shields.io/github/languages/top/R-Rothrock/diatom?color=red)<br>
 ![GitHub repo size](https://img.shields.io/github/repo-size/R-Rothrock/diatom?color=yellow)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/R-Rothrock/diatom?color=yellow)
+
+# Diatom
+
+**Diatom** ~~is~~ _will be_ a program capable of running the program of
+one "central" computer on another "client" computer when imitating the
+central computer's environment. This is accomplished with unencrypted
+UDP communication and ptrace-based syscall emulation.
 
 ## Installation
 
