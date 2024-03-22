@@ -23,6 +23,8 @@ struct fd {
   char *data_realloc;
 }
 
+int nextfd = 0;
+
 static sqlite3 *DB;
 
 static char SQL_INIT_CMD[128] = "\
@@ -79,10 +81,11 @@ void *setfd(int fd, struct fd *data) {
   // TODO
 }
 
-void *clsfs(int fd) {
+int clsfs(int fd) {
   // TODO
 }
 
 int *nextfd(void) {
-  // TODO
+  return nextfd;
 }
+
