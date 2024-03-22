@@ -85,7 +85,4 @@ int clsfs(int fd) {
   // TODO
 }
 
-int *nextfd(void) {
-  return nextfd;
-}
-
+int *nextfd(void) { return nextfd; }
