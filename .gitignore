@@ -1,3 +1,6 @@
 *.o
 *.out
-/protocols/lib/
+*.so
+
+# artwork
+*.kra
