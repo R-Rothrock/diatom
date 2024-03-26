@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/R-Rothrock/diatom/blob/main/assets/Logo_600x600.png" alt="Diatom Logo">
+  <img src="https://github.com/R-Rothrock/diatom/blob/main/assets/Logo_1200x800.png" alt="Diatom Logo" width="100%">
 </p>
 
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/R-Rothrock/diatom)
