@@ -122,25 +122,24 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // expecting DSCP_RESPONSE with matching diatom PID and INFO_FILE,
       // along with a path matching the one given, and, of course, data.
 
-      if (ident_dscp(proto_buf) != DSCP_RESPONSE) {
+      if (ident_dscp(proto_buf) != DSCP_RESPONSE)
         ERROR;
-      }
 
       struct dscp_response unpacked = unpack_dscp_response(proto_buf);
 
-      if (unpacked.diatom_pid != diatom_pid) {
+      if (unpacked.diatom_pid != diatom_pid)
         ERROR;
-      } else if (unpacked.info != INFO_FILE) {
+
+      else if (unpacked.info != INFO_FILE)
         ERROR;
-      } else if (unpacked.loc != newfd.loc) {
+      
+      else if (unpacked.loc != newfd.loc)
         ERROR;
-      }
 
       // writing received data to file `newfd.realloc + newfd.loc`
       // TODO
     }
     case SYS_CLOSE: {
-      // TODO delete locally stored file data
       SYSCALL_RETURN(clsfd(get_int_arg(RDI));
     }
     case SYS_STAT:

@@ -48,9 +48,6 @@ static char SQL_CLSFD_CMD[] = "\
 DELETE FROM fds\
 WHERE id = %s;";
 
-static char SQL_NEXTFD_CMD[] = "\
-SELECT MAX(id) FROM fds;";
-
 int fds_init(void) {
   /* run this before all other functions here */
 
@@ -83,6 +80,7 @@ void *setfd(int fd, struct fd *data) {
 
 int clsfs(int fd) {
   // TODO
+  // this function will also wipe the locally stored data (data_realloc)
 }
 
 int *nextfd(void) { return nextfd; }
