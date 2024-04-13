@@ -20,7 +20,7 @@ struct fd {
   int flags;
   // TODO other usefull descriptive data here
   char *data_loc;
-  char *data_realloc;
+  char *data_real_loc;
 };
 
 int nextfd = 0;
@@ -32,11 +32,11 @@ CREATE TABLE fds (\
 id      INTEGER PRIMARY KEY AUTOINCREMEMT NOT NULL,\
 type    TEXT NOT NULL,\
 loc     TEXT NOT NULL,\
-realloc TEXT NOT NULL,\
+real_loc TEXT NOT NULL,\
 );";
 
 static char SQL_INSERT_CMD[] = "\
-INSERT INTO fds (id, type, loc, realloc)\
+INSERT INTO fds (id, type, loc, real_loc)\
 VALUES (%s, %s, %s, %s);";
 
 static char SQL_FETCH_CMD[] = "\
@@ -53,7 +53,7 @@ int fds_init(void) {
 
   int ret;
 
-  ret = sqlite3_open(":memory:", DB);
+  ret = sqlite3_open(":memory:", &DB);
 
   if (ret != 0) {
     return ret;
@@ -80,7 +80,7 @@ void *setfd(int fd, struct fd *data) {
 
 int clsfs(int fd) {
   // TODO
-  // this function will also wipe the locally stored data (data_realloc)
+  // this function will also wipe the locally stored data (data_real_loc)
 }
 
 int get_nextfd(void) { return nextfd; }

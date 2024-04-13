@@ -28,16 +28,16 @@ extern struct dscp_response unpack_dscp_response(void *buf);
 // logging/logging.h
 extern char *get_formatted_time(void);
 
-extern debug(char *msg);
-extern info(char *msg);
-extern warning(char *msg);
-extern critical(char *msg);
-extern error(char *msg);
+extern void debug(char *msg);
+extern void info(char *msg);
+extern void warning(char *msg);
+extern void critical(char *msg);
+extern void error(char *msg);
 
-extern debugf(char *msg);
-extern infof(char *msg);
-extern warningf(char *msg);
-extern criticalf(char *msg);
-extern errorf(char *msg);
+extern void debugf(char *msg);
+extern void infof(char *msg);
+extern void warningf(char *msg);
+extern void criticalf(char *msg);
+extern void errorf(char *msg);
 
 #endif /* DEPS_H_ */

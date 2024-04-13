@@ -5,6 +5,7 @@
 #include <asm/unistd_64.h>
 #include <sys/ptrace.h>
 #include <sys/syscall.h>
+#include<sys/user.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -87,7 +88,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     goto skip;                                                                 \
   }
 
-#define __NRCALL_RETURN(x)                                                      \
+#define SYSCALL_RETURN(x)                                                      \
   {                                                                            \
     regs.rax = x;                                                              \
     goto skip;                                                                 \
@@ -104,7 +105,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // setting the new file descriptor
       struct fd newfd;
       newfd.type = FD_TYPE_FILE;
-      newfd.data_loc = get_str_arg(RDI);
+      newfd.data_loc = get_str_arg(REGS_RDI);
       newfd.data_realloc = tmp_path;
 
       {
@@ -138,7 +139,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // writing received data to file `newfd.realloc + newfd.loc`
       // TODO
     }
-    case __NR_CLOSE: {
+    case __NR_close: {
      SYSCALL_RETURN(clsfd(get_int_arg(RDI));
     }
     case __NR_stat:
