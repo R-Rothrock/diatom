@@ -8,7 +8,7 @@
 // "transient in-memory database." In this database we will store the
 // data of the file descriptors.
 
-#include <sqlite.h>
+#include <sqlite3.h>
 
 enum fd_type {
   FD_TYPE_FILE,
@@ -21,13 +21,13 @@ struct fd {
   // TODO other usefull descriptive data here
   char *data_loc;
   char *data_realloc;
-}
+};
 
 int nextfd = 0;
 
 static sqlite3 *DB;
 
-static char SQL_INIT_CMD[128] = "\
+static char SQL_INIT_CMD[] = "\
 CREATE TABLE fds (\
 id      INTEGER PRIMARY KEY AUTOINCREMEMT NOT NULL,\
 type    TEXT NOT NULL,\
@@ -59,7 +59,7 @@ int fds_init(void) {
     return ret;
   }
 
-  ret = sqlite3_exec(&SQL_INIT_CMD, &DB);
+  ret = sqlite3_exec(&SQL_INIT_CMD, &DB, /* TODO linter says there's problems */);
 
   // TODO
 }
@@ -83,4 +83,4 @@ int clsfs(int fd) {
   // this function will also wipe the locally stored data (data_realloc)
 }
 
-int *nextfd(void) { return nextfd; }
+int get_nextfd(void) { return nextfd; }
