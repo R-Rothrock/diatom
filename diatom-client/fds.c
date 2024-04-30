@@ -59,7 +59,8 @@ int fds_init(void) {
     return ret;
   }
 
-  ret = sqlite3_exec(&SQL_INIT_CMD, &DB, /* TODO linter says there's problems */);
+  ret =
+      sqlite3_exec(&SQL_INIT_CMD, &DB, /* TODO linter says there's problems */);
 
   // TODO
 }

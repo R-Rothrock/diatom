@@ -121,10 +121,10 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
 
       else if (unpacked.info != INFO_FILE)
         ERROR;
-      
+
       else if (strcmp(unpacked.loc, newfd.loc) != 0)
         ERROR;
-    
+
       // So
       // We are going to add the data of this file descriptor to a
       // file at `newfd.real_loc + newfd.loc`, then we're going to
@@ -133,7 +133,8 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // the good news of success.
 
       int ret = setfd(get_nextfd(), newfd);
-      if(!ret) ERROR;
+      if (!ret)
+        ERROR;
 
       char *path = malloc(strlen(newfd.real_loc) + newfd.loc + 1);
       strcat(path, newfd.real_loc);
@@ -142,12 +143,10 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       FILE *stream = open(path, "wb");
       write(); // TODO
 
-      free(&path)
-      free(&proto_buf);
-
+      free(&path) free(&proto_buf);
     }
     case __NR_close: {
-     SYSCALL_RETURN(clsfd(get_int_arg(RDI)));
+      SYSCALL_RETURN(clsfd(get_int_arg(RDI)));
     }
     case __NR_stat:
       // TODO
@@ -330,7 +329,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case __NR_getrusage:
       // TODO
     case __NR: // TODO I don't know which goes here
-      // TODO
+               // TODO
     case __NR_times:
       // TODO
     case __NR_ptrace:
@@ -338,7 +337,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case __NR_getuid:
       // TODO
     case __NR: // TODO I don't know which goes here
-      // TODO
+               // TODO
     case __NR_getgid:
       // TODO
     case __NR_setuid:
@@ -392,7 +391,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case __NR_rt_sigsuspend:
       // TODO
     case __NR_: // TODO fix
-      // TODO
+                // TODO
     case __NR_utime:
       // TODO
     case __NR_mknod:
@@ -408,7 +407,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case __NR_fstatfs:
       // TODO
     case __NR: // TODO fix
-      // TODO
+               // TODO
     case __NR_getpriority:
       // TODO
     case __NR_setpriority:
@@ -426,7 +425,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case __NR_sched_get_priority_min:
       // TODO
     case __NR_SCHED_RR_GET_INTERVAL: // TODO make all this stuff lowercase
-      // TODO
+                                     // TODO
     case __NR_MLOCK:
       // TODO
     case __NR_MUNLOCK:
