@@ -3,9 +3,10 @@
 // running programs in what looks like another computers environment.
 
 #include <asm/unistd_64.h>
+#include <stdio.h>
 #include <sys/ptrace.h>
 #include <sys/syscall.h>
-#include<sys/user.h>
+#include <sys/user.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -72,27 +73,15 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
      *   ptrace, process_vm_readv, process_vm_writev
      */
 
-#define DENIED                                                                 \
-  {                                                                            \
-    regs.rax = -1;                                                             \
-    goto skip;                                                                 \
-  }
-#define NOT_IMPLEMENTED                                                        \
-  {                                                                            \
-    regs.rax = -1;                                                             \
-    goto skip;                                                                 \
-  }
-#define ERROR                                                                  \
-  {                                                                            \
-    regs.rax = -1;                                                             \
-    goto skip;                                                                 \
-  }
-
 #define SYSCALL_RETURN(x)                                                      \
   {                                                                            \
     regs.rax = x;                                                              \
     goto skip;                                                                 \
   }
+
+#define ERROR SYSCALL_RETURN(-1)
+#define NOT_IMPLEMENTED ERROR
+#define DENIED ERROR
 
     switch (regs.orig_rax) {
     case __NR_read:
@@ -105,8 +94,8 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // setting the new file descriptor
       struct fd newfd;
       newfd.type = FD_TYPE_FILE;
-      newfd.data_loc = get_str_arg(REGS_RDI);
-      newfd.data_realloc = tmp_path;
+      newfd.loc = get_str_arg(REGS_RDI);
+      newfd.real_loc = tmp_path;
 
       {
         void *proto_buf =
@@ -133,14 +122,32 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       else if (unpacked.info != INFO_FILE)
         ERROR;
       
-      else if (unpacked.loc != newfd.loc)
+      else if (strcmp(unpacked.loc, newfd.loc) != 0)
         ERROR;
+    
+      // So
+      // We are going to add the data of this file descriptor to a
+      // file at `newfd.real_loc + newfd.loc`, then we're going to
+      // add the file descriptor to the SQLite database in RAM.
+      // Finally, we'll free everything used in the process and give
+      // the good news of success.
 
-      // writing received data to file `newfd.realloc + newfd.loc`
-      // TODO
+      int ret = setfd(get_nextfd(), newfd);
+      if(!ret) ERROR;
+
+      char *path = malloc(strlen(newfd.real_loc) + newfd.loc + 1);
+      strcat(path, newfd.real_loc);
+      strcat(path, newfd.loc);
+
+      FILE *stream = open(path, "wb");
+      write(); // TODO
+
+      free(&path)
+      free(&proto_buf);
+
     }
     case __NR_close: {
-     SYSCALL_RETURN(clsfd(get_int_arg(RDI));
+     SYSCALL_RETURN(clsfd(get_int_arg(RDI)));
     }
     case __NR_stat:
       // TODO

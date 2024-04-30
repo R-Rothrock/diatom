@@ -19,8 +19,8 @@ struct fd {
   enum fd_type type;
   int flags;
   // TODO other usefull descriptive data here
-  char *data_loc;
-  char *data_real_loc;
+  char *loc;
+  char *real_loc;
 };
 
 int nextfd = 0;
@@ -74,7 +74,7 @@ struct fd *getfd(int fd) {
   // TODO
 }
 
-void *setfd(int fd, struct fd *data) {
+int setfd(int fd, struct fd *data) {
   // TODO
 }
 
