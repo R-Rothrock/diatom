@@ -17,11 +17,21 @@ enum fd_type {
 
 struct fd {
   enum fd_type type;
-  int flags;
-  // TODO other usefull descriptive data here
-  char *loc;
-  char *real_loc;
+  int flags; // fd flags (for transparency with the kernel
+  // TODO other usefull descriptive data here (if needed)
+  int index;      // for, say, keeping track of where we are in a file
+  char *loc;      // location on the central machine
+  char *real_loc; // location on this machine (look at next comment)
 };
+
+// to clarify:
+// fd.real_loc isn't actually the full path to the file. That's
+// actually `fd.real_loc + fd.loc` if C supported string
+// concatenation. For example, if on the central machine the file is
+// `/usr/bin/grep`, and real_loc ends of being something like
+// `~/.diatom/files` or something of that nature (yet to be
+// determined), then the full local files is
+// `$HOME/.diatom/files/usr/bin/grep`
 
 int nextfd = 0;
 
@@ -60,7 +70,7 @@ int fds_init(void) {
   }
 
   ret =
-      sqlite3_exec(&SQL_INIT_CMD, &DB, /* TODO linter says there's problems */);
+      sqlite3_exec(&SQL_INIT_CMD, &DB /* TODO linter says there's problems */);
 
   // TODO
 }
@@ -81,7 +91,7 @@ int setfd(int fd, struct fd *data) {
 
 int clsfs(int fd) {
   // TODO
-  // this function will also wipe the locally stored data (data_real_loc)
+  // this function will also wipe the locally stored data (real_loc)
 }
 
 int get_nextfd(void) { return nextfd; }

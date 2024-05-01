@@ -89,11 +89,15 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case __NR_write:
       // TODO
     case __NR_open: {
-      // this is my half-baked idea for how this goes.
+      // this is my idea for how this goes
+      // _seems_ air tight...
 
       // setting the new file descriptor
       struct fd newfd;
+
       newfd.type = FD_TYPE_FILE;
+      newfd.flags = newfd.flags ^ newfd.flags;
+      newfd.index = newfd.index ^ newfd.index;
       newfd.loc = get_str_arg(REGS_RDI);
       newfd.real_loc = tmp_path;
 
@@ -141,15 +145,21 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       strcat(path, newfd.loc);
 
       FILE *stream = fopen(path, "wb");
+      if (!stream)
+        ERROR;
+
       ret = write(unpacked.data, strlen(unpacked.data) + 1, 1, stream);
       if (ret != 0)
         ERROR;
+
+      // coast clear
+
+      fclose(stream);
 
       free(&path);
       free(&proto_buf);
 
       SYSCALL_RETURN(0);
-
     }
     case __NR_close: {
       SYSCALL_RETURN(clsfd(get_int_arg(RDI)));
