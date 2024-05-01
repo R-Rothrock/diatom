@@ -133,17 +133,23 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // the good news of success.
 
       int ret = setfd(get_nextfd(), newfd);
-      if (!ret)
+      if (ret != 0)
         ERROR;
 
       char *path = malloc(strlen(newfd.real_loc) + newfd.loc + 1);
       strcat(path, newfd.real_loc);
       strcat(path, newfd.loc);
 
-      FILE *stream = open(path, "wb");
-      write(); // TODO
+      FILE *stream = fopen(path, "wb");
+      ret = write(unpacked.data, strlen(unpacked.data) + 1, 1, stream);
+      if (ret != 0)
+        ERROR;
 
-      free(&path) free(&proto_buf);
+      free(&path);
+      free(&proto_buf);
+
+      SYSCALL_RETURN(0);
+
     }
     case __NR_close: {
       SYSCALL_RETURN(clsfd(get_int_arg(RDI)));

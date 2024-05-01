@@ -29,8 +29,6 @@ void *dscp(enum dscp_req req, uint16_t diatom_pid, ...) {
    * [ packet size ][ diatom PID ][ DSCP_RESPONSE ][ enum info ][ loc ][ data ]
    */
 
-  // TODO added data size to DSCP_RESPONSE
-
   va_list ptr;
   va_start(ptr, diatom_pid);
 
