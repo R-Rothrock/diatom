@@ -31,14 +31,12 @@ All the things that separate this project from being actual software.
    - [x] add makefile
      - `logging/makefile`
  - Diatom client
-   - [X] sandbox environment
+   - [x] sandbox environment
      - `diatom-client/env.c`
    - [ ] handle _every_, **single**, system call.
-   - [X] handle UDP
+   - [x] handle UDP
      - `diatom-client/handler.c`
-   - [ ] manage threads
-     - `diatom-client/threads.c`
-   - [ ] get some persistent data storage
+   - [x] get some persistent data storage
      - `diatom-client/data.c`
    - [ ] duck-tape it all together
      - `diatom-client/main.c`
@@ -80,5 +78,5 @@ All the things that separate this project from being actual software.
 ### 1.0.0
 
  - fix the many, many, problems that will come along the way.
-   - learn Radare2.
+   - [x] learn Radare2.
  - thoroughly test this thing for vulnerabilities

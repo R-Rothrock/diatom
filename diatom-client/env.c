@@ -2,8 +2,6 @@
 // https://github.com/R-Rothrock/diatom
 // running programs in what looks like another computers environment.
 
-#include <asm/unistd_64.h>
-#include <stdio.h>
 #include <sys/ptrace.h>
 #include <sys/syscall.h>
 #include <sys/user.h>
@@ -45,25 +43,25 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
 
   const char *tmp_path = get_tmp_path();
 
-  char *get_str_arg(enum ARG_REGS arg_register); // TODO
-  int *get_int_arg(enum ARG_REGS arg_register);  // TODO
+  char *get_str_arg(enum arg_regs arg_register); // TODO
+  int *get_int_arg(enum arg_regs arg_register);  // TODO
   // TODO more of these
 
   for (;;) {
-    // utilizing PTRACE __NREMU increases performance by
+    // utilizing PTRACE_SYSEMU increases performance by
     // lowering the amount of mode switches.
     ptrace(PTRACE_SYSEMU, pid, 0, 0);
     waitpid(pid, 0, 0);
     ptrace(PTRACE_GETREGS, pid, 0, &regs);
 
     /*
-     * Some __NRcalls automatically return with error without sending
+     * Some syscalls automatically return with error without sending
      * a request. They are:
      *
      * networking:
      *   accept, connect, bind, recvfrom, accept, recvmsg, etc.
      *
-     * __NRtem:
+     * system:
      *   reboot, shutdown, swapoff, swapon
      *
      * kernel:
@@ -84,11 +82,11 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
 #define DENIED ERROR
 
     switch (regs.orig_rax) {
-    case __NR_read:
+    case SYS_read:
       // TODO
-    case __NR_write:
+    case SYS_write:
       // TODO
-    case __NR_open: {
+    case SYS_open: {
       // this is my idea for how this goes
       // _seems_ air tight...
 
@@ -161,594 +159,594 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
 
       SYSCALL_RETURN(0);
     }
-    case __NR_close: {
+    case SYS_close: {
       SYSCALL_RETURN(clsfd(get_int_arg(RDI)));
     }
-    case __NR_stat:
+    case SYS_stat:
       // TODO
-    case __NR_fstat:
+    case SYS_fstat:
       // TODO
-    case __NR_lstat:
+    case SYS_lstat:
       // TODO
-    case __NR_poll:
+    case SYS_poll:
       // TODO
-    case __NR_lseek:
+    case SYS_lseek:
       // TODO
-    case __NR_mmap:
+    case SYS_mmap:
       // TODO
-    case __NR_mprotect:
+    case SYS_mprotect:
       // TODO
-    case __NR_munmap:
+    case SYS_munmap:
       // TODO
-    case __NR_brk:
+    case SYS_brk:
       // TODO
-    case __NR_rt_sigaction:
+    case SYS_rt_sigaction:
       // TODO
-    case __NR_rt_sigprocmask:
+    case SYS_rt_sigprocmask:
       // TODO
-    case __NR_rt_sigreturn:
+    case SYS_rt_sigreturn:
       // TODO
-    case __NR_ioctl:
+    case SYS_ioctl:
       // TODO
-    case __NR_pread64:
+    case SYS_pread64:
       // TODO
-    case __NR_pwrite64:
+    case SYS_pwrite64:
       // TODO
-    case __NR_readv:
+    case SYS_readv:
       // TODO
-    case __NR_writev:
+    case SYS_writev:
       // TODO
-    case __NR_access:
+    case SYS_access:
       // TODO
-    case __NR_pipe:
+    case SYS_pipe:
       // TODO
-    case __NR_select:
+    case SYS_select:
       // TODO
-    case __NR_sched_yield:
+    case SYS_sched_yield:
       // TODO
-    case __NR_mremap:
+    case SYS_mremap:
       // TODO
-    case __NR_mincore:
+    case SYS_mincore:
       // TODO
-    case __NR_madvise:
+    case SYS_madvise:
       // TODO
-    case __NR_shmget:
+    case SYS_shmget:
       // TODO
-    case __NR_shmat:
+    case SYS_shmat:
       // TODO
-    case __NR_shmctl:
+    case SYS_shmctl:
       // TODO
-    case __NR_dup:
+    case SYS_dup:
       // TODO
-    case __NR_dup2:
+    case SYS_dup2:
       // TODO
-    case __NR_pause:
+    case SYS_pause:
       // TODO
-    case __NR_nanosleep:
+    case SYS_nanosleep:
       // TODO
-    case __NR_gettimeofday:
+    case SYS_gettimeofday:
       // TODO
-    case __NR_alarm:
+    case SYS_alarm:
       // TODO
-    case __NR_setitimer:
+    case SYS_setitimer:
       // TODO
-    case __NR_getpid:
+    case SYS_getpid:
       // TODO
-    case __NR_sendfile:
+    case SYS_sendfile:
       DENIED
-    case __NR_connect:
+    case SYS_connect:
       DENIED
-    case __NR_accept:
+    case SYS_accept:
       DENIED
-    case __NR_sendto:
+    case SYS_sendto:
       DENIED
-    case __NR_recvfrom:
+    case SYS_recvfrom:
       DENIED
-    case __NR_sendmsg:
+    case SYS_sendmsg:
       DENIED
-    case __NR_recvmsg:
+    case SYS_recvmsg:
       DENIED
-    case __NR_shutdown:
+    case SYS_shutdown:
       DENIED
-    case __NR_bind:
+    case SYS_bind:
       DENIED
-    case __NR_listen:
+    case SYS_listen:
       DENIED
-    case __NR_getsockname:
+    case SYS_getsockname:
       DENIED
-    case __NR_getpeername:
+    case SYS_getpeername:
       // TODO
-    case __NR_socketpair:
+    case SYS_socketpair:
       // TODO
-    case __NR_setsockopt:
+    case SYS_setsockopt:
       // TODO
-    case __NR_getsockopt:
+    case SYS_getsockopt:
       // TODO
-    case __NR_clone:
+    case SYS_clone:
       // TODO
-    case __NR_fork:
+    case SYS_fork:
       // TODO
-    case __NR_vfork:
+    case SYS_vfork:
       // TODO
-    case __NR_execve:
+    case SYS_execve:
       // TODO
-    case __NR_exit:
+    case SYS_exit:
       // TODO
-    case __NR_wait4:
+    case SYS_wait4:
       // TODO
-    case __NR_kill:
+    case SYS_kill:
       // TODO
-    case __NR_uname:
+    case SYS_uname:
       // TODO
-    case __NR_semget:
+    case SYS_semget:
       // TODO
-    case __NR_semop:
+    case SYS_semop:
       // TODO
-    case __NR_semctl:
+    case SYS_semctl:
       // TODO
-    case __NR_shmdt:
+    case SYS_shmdt:
       // TODO
-    case __NR_msgget:
+    case SYS_msgget:
       // TODO
-    case __NR_msgctl:
+    case SYS_msgctl:
       // TODO
-    case __NR_fcntl:
+    case SYS_fcntl:
       // TODO
-    case __NR_flock:
+    case SYS_flock:
       // TODO
-    case __NR_fsync:
+    case SYS_fsync:
       // TODO
-    case __NR_fdatasync:
+    case SYS_fdatasync:
       // TODO
-    case __NR_truncate:
+    case SYS_truncate:
       // TODO
-    case __NR_ftruncate:
+    case SYS_ftruncate:
       // TODO
-    case __NR_getdents:
+    case SYS_getdents:
       // TODO
-    case __NR_getcwd:
+    case SYS_getcwd:
       // TODO
-    case __NR_chdir:
+    case SYS_chdir:
       // TODO
-    case __NR_fchdir:
+    case SYS_fchdir:
       // TODO
-    case __NR_rename:
+    case SYS_rename:
       // TODO
-    case __NR_mkdir:
+    case SYS_mkdir:
       // TODO
-    case __NR_rmdir:
+    case SYS_rmdir:
       // TODO
-    case __NR_creat:
+    case SYS_creat:
       // TODO
-    case __NR_link:
+    case SYS_link:
       // TODO
-    case __NR_unlink:
+    case SYS_unlink:
       // TODO
-    case __NR_symlink:
+    case SYS_symlink:
       // TODO
-    case __NR_readlink:
+    case SYS_readlink:
       // TODO
-    case __NR_chmod:
+    case SYS_chmod:
       // TODO
-    case __NR_chown:
+    case SYS_chown:
       // TODO
-    case __NR_fchown:
+    case SYS_fchown:
       // TODO
-    case __NR_lchown:
+    case SYS_lchown:
       // TODO
-    case __NR_umask:
+    case SYS_umask:
       // TODO
-    case __NR_gettimeofday:
+    case SYS_gettimeofday:
       // TODO
-    case __NR_getrlimit:
+    case SYS_getrlimit:
       // TODO
-    case __NR_getrusage:
+    case SYS_getrusage:
       // TODO
-    case __NR: // TODO I don't know which goes here
-               // TODO
-    case __NR_times:
+    case SYS: // TODO I don't know which goes here
       // TODO
-    case __NR_ptrace:
+    case SYS_times:
+      // TODO
+    case SYS_ptrace:
       DENIED
-    case __NR_getuid:
+    case SYS_getuid:
       // TODO
-    case __NR: // TODO I don't know which goes here
-               // TODO
-    case __NR_getgid:
+    case SYS: // TODO I don't know which goes here
       // TODO
-    case __NR_setuid:
+    case SYS_getgid:
       // TODO
-    case __NR_setgid:
+    case SYS_setuid:
       // TODO
-    case __NR_geteuid:
+    case SYS_setgid:
       // TODO
-    case __NR_getegid:
+    case SYS_geteuid:
       // TODO
-    case __NR_getpgid:
+    case SYS_getegid:
       // TODO
-    case __NR_getppid:
+    case SYS_getpgid:
       // TODO
-    case __NR_getpgrp:
+    case SYS_getppid:
       // TODO
-    case __NR_setsid:
+    case SYS_getpgrp:
       // TODO
-    case __NR_setreuid:
+    case SYS_setsid:
       // TODO
-    case __NR_setregid:
+    case SYS_setreuid:
       // TODO
-    case __NR_getgroups:
+    case SYS_setregid:
       // TODO
-    case __NR_getgroups:
+    case SYS_getgroups:
       // TODO
-    case __NR_setresuid:
+    case SYS_getgroups:
       // TODO
-    case __NR_setresuid:
+    case SYS_setresuid:
       // TODO
-    case __NR_setresgid:
+    case SYS_setresuid:
       // TODO
-    case __NR_getresgid:
+    case SYS_setresgid:
       // TODO
-    case __NR_getpgid:
+    case SYS_getresgid:
       // TODO
-    case __NR_setfsuid:
+    case SYS_getpgid:
       // TODO
-    case __NR_getsid:
+    case SYS_setfsuid:
       // TODO
-    case __NR_capget:
+    case SYS_getsid:
       // TODO
-    case __NR_capset:
+    case SYS_capget:
       // TODO
-    case __NR_rt_sigpending:
+    case SYS_capset:
       // TODO
-    case __NR_rt_sigtimedwait:
+    case SYS_rt_sigpending:
       // TODO
-    case __NR_rt_sigqueueinfo:
+    case SYS_rt_sigtimedwait:
       // TODO
-    case __NR_rt_sigsuspend:
+    case SYS_rt_sigqueueinfo:
       // TODO
-    case __NR_: // TODO fix
-                // TODO
-    case __NR_utime:
+    case SYS_rt_sigsuspend:
       // TODO
-    case __NR_mknod:
+    case SYS_: // TODO fix
       // TODO
-    case __NR_uselib:
+    case SYS_utime:
       // TODO
-    case __NR_personality:
+    case SYS_mknod:
       // TODO
-    case __NR_ustat:
+    case SYS_uselib:
       // TODO
-    case __NR_statfs:
+    case SYS_personality:
       // TODO
-    case __NR_fstatfs:
+    case SYS_ustat:
       // TODO
-    case __NR: // TODO fix
-               // TODO
-    case __NR_getpriority:
+    case SYS_statfs:
       // TODO
-    case __NR_setpriority:
+    case SYS_fstatfs:
       // TODO
-    case __NR_sched_setparam:
+    case SYS: // TODO fix
       // TODO
-    case __NR_sched_getparam:
+    case SYS_getpriority:
       // TODO
-    case __NR_sched_setscheduler:
+    case SYS_setpriority:
       // TODO
-    case __NR_sched_getscheduler:
+    case SYS_sched_setparam:
       // TODO
-    case __NR_sched_get_priority_max:
+    case SYS_sched_getparam:
       // TODO
-    case __NR_sched_get_priority_min:
+    case SYS_sched_setscheduler:
       // TODO
-    case __NR_SCHED_RR_GET_INTERVAL: // TODO make all this stuff lowercase
-                                     // TODO
-    case __NR_MLOCK:
+    case SYS_sched_getscheduler:
       // TODO
-    case __NR_MUNLOCK:
+    case SYS_sched_get_priority_max:
       // TODO
-    case __NR_MLOCKALL:
+    case SYS_sched_get_priority_min:
       // TODO
-    case __NR_MUNLOCKALL:
+    case SYS_sched_rr_get_interval:
       // TODO
-    case __NR_VHANGUP:
+    case SYS_mlock:
       // TODO
-    case __NR_MODIFY_LDT:
+    case SYS_munlock:
       // TODO
-    case __NR_PIVOT_ROOT:
+    case SYS_mlockall:
       // TODO
-    case __NRCTL:
+    case SYS_munlockall:
       // TODO
-    case __NR_PRCTL:
+    case SYS_vhangup:
       // TODO
-    case __NR_ARCH_PRCTL:
+    case SYS_modify_ldt:
       // TODO
-    case __NR_ADJTIMEX:
+    case SYS_pivot_root:
       // TODO
-    case __NR_SETRLIMIT:
+    case SYS_sysctl: // TODO fix
       // TODO
-    case __NR_CHROOT:
+    case SYS_prctl:
       // TODO
-    case __NR_SYNC:
+    case SYS_arch_prctl:
       // TODO
-    case __NR_ACCT:
+    case SYS_adjtimex:
       // TODO
-    case __NR_SETTIMEOFDAY:
+    case SYS_setrlimit:
       // TODO
-    case __NR_MOUNT:
+    case SYS_chroot:
       // TODO
-    case __NR_UMOUNT2:
+    case SYS_sync:
       // TODO
-    case __NR_SWAPON:
+    case SYS_acct:
+      // TODO
+    case SYS_settimeofday:
+      // TODO
+    case SYS_mount:
+      // TODO
+    case SYS_umount2:
+      // TODO
+    case SYS_swapon:
       DENIED
-    case __NR_SWAPOFF:
+    case SYS_swapoff:
       DENIED
-    case __NR_REBOOT:
+    case SYS_reboot:
       DENIED
-    case __NR_SETHOSTNAME:
+    case SYS_sethostname:
       // TODO
-    case __NR_SETDOMAINNAME:
+    case SYS_setdomainname:
       // TODO
-    case __NR_IOPL:
+    case SYS_iopl:
       // TODO
-    case __NR_IOPERM:
+    case SYS_ioperm:
       // TODO
-    case __NR_CREATE_MODULE:
+    case SYS_create_module:
       DENIED
-    case __NR_INIT_MODULE:
+    case SYS_init_module:
       DENIED
-    case __NR_DELETE_MODULE:
+    case SYS_delete_module:
       DENIED
-    case __NR_QUOTACTL:
+    case SYS_quotactl:
       // TODO
-    case __NR_GETTID:
+    case SYS_gettid:
       // TODO
-    case __NR_READAHEAD:
+    case SYS_readahead:
       // TODO
-    case __NR_SETXADDR:
+    case SYS_setxattr:
       // TODO
-    case __NR_LSETXATTR:
+    case SYS_lsetxattr:
       // TODO
-    case __NR_FSETXATTR:
+    case SYS_fsetxattr:
       // TODO
-    case __NR_GETXATTR:
+    case SYS_getxattr:
       // TODO
-    case __NR_LGETXATTR:
+    case SYS_lgetxattr:
       // TODO
-    case __NR_FGETXATTR:
+    case SYS_fgetxattr:
       // TODO
-    case __NR_LISTXATTR:
+    case SYS_listxattr:
       // TODO
-    case __NR_FLISTXATTR:
+    case SYS_flistxattr:
       // TODO
-    case __NR_REMOVEXATTR:
+    case SYS_removexattr:
       // TODO
-    case __NR_FREMOVEXATTR:
+    case SYS_fremovexattr:
       // TODO
-    case __NR_TKILL:
+    case SYS_tkill:
       // TODO
-    case __NR_TIME:
+    case SYS_time:
       // TODO
-    case __NR_FUTEX:
+    case SYS_futex:
       // TODO
-    case __NR_SCHED_SETAFFINITY:
+    case SYS_sched_setaffinity:
       // TODO
-    case __NR_SCHED_GETAFFINITY:
+    case SYS_sched_getaffinity:
       // TODO
-    case __NR_SET_THREAD_AREA:
+    case SYS_set_thread_area:
       // TODO
-    case __NR_IO_SETUP:
+    case SYS_io_setup:
       // TODO
-    case __NR_IO_DESTROY:
+    case SYS_io_destroy:
       // TODO
-    case __NR_IO_GETEVENTS:
+    case SYS_io_getevents:
       // TODO
-    case __NR_IO_SUBMIT:
+    case SYS_io_submit:
       // TODO
-    case __NR_IO_CANCEL:
+    case SYS_io_cancel:
       // TODO
-    case __NR_GET_THREAD_AERA:
+    case SYS_get_thread_area:
       // TODO
-    case __NR_LOOKUP_DCOOKIE:
+    case SYS_lookup_dcookie:
       // TODO
-    case __NR_EPOLL_CREATE:
+    case SYS_epoll_create:
       // TODO
-    case __NR_EPOLL_CTL_OLD:
+    case SYS_epoll_ctl_old:
       // TODO
-    case __NR_EPOLL_WAIT_OLD:
+    case SYS_epoll_wait_old:
       // TODO
-    case __NR_REMAP_FILE_PAGES:
+    case SYS_remap_file_pages:
       // TODO
-    case __NR_GETDENTS64:
+    case SYS_getdents64:
       // TODO
-    case __NR_SET_TID_ADDRESS:
+    case SYS_set_tid_address:
       // TODO
-    case __NR_RESTART __NRCALL:
+    case SYS_restart_syscall:
       // TODO
-    case __NR_SEMTIMEDOP:
+    case SYS_semtimedup: // TODO fix
       // TODO
-    case __NR_FADVISE64:
+    case SYS_fadvise64:
       // TODO
-    case __NR_TIMER_CREATE:
+    case SYS_timer_create:
       // TODO
-    case __NR_TIMER_SETTIME:
+    case SYS_timer_settime:
       // TODO
-    case __NR_TIMER_GETTIME:
+    case SYS_timer_gettime:
       // TODO
-    case __NR_TIMER_GETOVERRUN:
+    case SYS_timer_getoverrun:
       // TODO
-    case __NR_TIMER_DELETE:
+    case SYS_timer_delete:
       // TODO
-    case __NR_CLOCK_SETTIME:
-      // TODO
-    case __NR_CLOCK_GETTIME:
-      // TODO
-    case __NR_GETRES:
-      // TODO
-    case __NR_CLOCK_NANOSLEEP:
-      // TODO
-    case __NR_EXIT_GROUP:
-      // TODO
-    case __NR_EPOLL_WAIT:
-      // TODO
-    case __NR_EPOLL_CTL:
-      // TODO
-    case __NR_TGKILL:
-      // TODO
-    case __NR_UTIMES:
-      // TODO
-    case __NR_MBIND:
-      // TODO
-    case __NR_SET_MEMPOLICY:
-      // TODO
-    case __NR_GET_MEMPOLICY:
-      // TODO
-    case __NR_MQ_OPEN:
-      // TODO
-    case __NR_MQ_UNLINK:
-      // TODO
-    case __NR_MQ_TIMEDSEND:
-      // TODO
-    case __NR_MQ_TIMEDRECEIVE:
-      // TODO
-    case __NR_MQ_NOTIFY:
-      // TODO
-    case __NR_GETSETATTR:
-      // TODO
-    case __NR_KEXEC_LOAD:
-      // TODO
-    case __NR_WAITID:
-      // TODO
-    case __NR_ADD_KEY:
-      // TODO
-    case __NR_REQUEST_KEY:
-      // TODO
-    case __NR_KEYCTL:
-      // TODO
-    case __NR_IOPRIO_SET:
-      // TODO
-    case __NR_IOPRIO_GET:
-      // TODO
-    case __NR_INOTIFY_INIT:
-      // TODO
-    case __NR_INOTIFY_ADD_WATCH:
-      // TODO
-    case __NR_INOTIFY_RM_WATCH:
-      // TODO
-    case __NR_MIGRATE_PAGES:
-      // TODO
-    case __NR_OPENAT:
-      // TODO
-    case __NR_MKDIRAT:
-      // TODO
-    case __NR_MKNODAT:
-      // TODO
-    case __NR_FCHWONAT:
-      // TODO
-    case __NR_FUTIMESAT:
-      // TODO
-    case __NR_NEWFSTATAT:
-      // TODO
-    case __NR_UNLINKAT:
-      // TODO
-    case __NR_RENAMEAT:
-      // TODO
-    case __NR_LINKAT:
-      // TODO
-    case __NR_SYMLINKAT:
-      // TODO
-    case __NR_READLINKAT:
-      // TODO
-    case __NR_FCHMODAT:
-      // TODO
-    case __NR_FACCESSAT:
-      // TODO
-    case __NR_PSELECT6:
-      // TODO
-    case __NR_PPOLL:
-      // TODO
-    case __NR_UNSHARE:
-      // TODO
-    case __NR_SET_ROBUST_LIST:
-      // TODO
-    case __NR_GET_ROBUST_LIST:
-      // TODO
-    case __NR_SPLICE:
-      // TODO
-    case __NR_TEE:
-      // TODO
-    case __NR_SYNC_FILE_RANGE:
-      // TODO
-    case __NR_VMSPLICE:
-      // TODO
-    case __NR_MOVE_PAGES:
-      // TODO
-    case __NR_UTIMENSAT:
-      // TODO
-    case __NR_EPOLL_PWAIT:
-      // TODO
-    case __NR_SIGNALFD:
-      // TODO
-    case __NR_TIMERFD_CREATE:
-      // TODO
-    case __NR_EVENTFD:
-      // TODO
-    case __NR_FALLOCATE:
-      // TODO
-    case __NR_TIMERFD_SETTIME:
-      // TODO
-    case __NR_TIMERFD_GETTIME:
-      // TODO
-    case __NR_ACCEPT4:
-      // TODO
-    case __NR_SIGNALFD4:
-      // TODO
-    case __NR_EVENTFD2:
-      // TODO
-    case __NR_EPOLL_CREATE1:
-      // TODO
-    case __NR_DUP3:
-      // TODO
-    case __NR_PIPE2:
-      // TODO
-    case __NR_INOTIFY_INIT1:
-      // TODO
-    case __NR_PREADV:
-      // TODO
-    case __NR_PWRITEV:
-      // TODO
-    case __NR_RT_TGSIGQUEUEINFO:
-      // TODO
-    case __NR_PERF_EVENT_OPEN:
-      // TODO
-    case __NR_RECVMSG:
-      // TODO
-    case __NR_FANOTIFY_INIT:
-      // TODO
-    case __NR_FANOTIFY_MARK:
-      // TODO
-    case __NR_PRLIMIT64:
-      // TODO
-    case __NR_NAME_TO_HANDLE_AT:
-      // TODO
-    case __NR_OPEN_TO_HANDLE_AT:
-      // TODO
-    case __NR_CLOCK_ADJTIME:
-      // TODO
-    case __NR_SYNCFS:
-      // TODO
-    case __NR_SENDMMSG:
+    case SYS_clock_settime:
       DENIED
-    case __NR_SETNS:
-      // TODO
-    case __NR_GETCPU:
-      // TODO
-    case __NR_PROCESS_VM_READY:
+    case SYS_clock_gettime:
       DENIED
-    case __NR_PROCESS_VM_WRITEV:
-      DENIED
-    case __NR_KCMP:
+    case SYS_getres: // TODO fix
       // TODO
-    case __NR_FINIT_MODULE:
+    case SYS_clock_nanosleep:
+      // TODO
+    case SYS_exit_group:
+      // TODO
+    case SYS_epoll_wait:
+      // TODO
+    case SYS_epoll_ctl:
+      // TODO
+    case SYS_tgkill:
+      // TODO
+    case SYS_utimes:
+      // TODO
+    case SYS_mbind:
+      // TODO
+    case SYS_set_mempolicy:
+      // TODO
+    case SYS_get_mempolicy:
+      // TODO
+    case SYS_mq_open:
+      // TODO
+    case SYS_mq_unlink:
+      // TODO
+    case SYS_mq_timedsend:
+      // TODO
+    case SYS_mq_timedreceive:
+      // TODO
+    case SYS_mq_notify:
+      // TODO
+    case SYS_getsetattr:
+      // TODO
+    case SYS_kexec_load:
+      // TODO
+    case SYS_waitid:
+      // TODO
+    case SYS_add_key:
+      // TODO
+    case SYS_request_key:
+      // TODO
+    case SYS_keyctl:
+      // TODO
+    case SYS_ioprio_set:
+      // TODO
+    case SYS_ioprio_get:
+      // TODO
+    case SYS_inotify_init:
+      // TODO
+    case SYS_inotify_add_watch:
+      // TODO
+    case SYS_inotify_rm_watch:
+      // TODO
+    case SYS_migrate_pages:
+      // TODO
+    case SYS_openat:
+      // TODO
+    case SYS_mkdirat:
+      // TODO
+    case SYS_mknodat:
+      // TODO
+    case SYS_fchwonat:
+      // TODO
+    case SYS_futimesat:
+      // TODO
+    case SYS_newfstatat:
+      // TODO
+    case SYS_unlinkat:
+      // TODO
+    case SYS_renameat:
+      // TODO
+    case SYS_linkat:
+      // TODO
+    case SYS_symlinkat:
+      // TODO
+    case SYS_readlinkat:
+      // TODO
+    case SYS_fchmodat:
+      // TODO
+    case SYS_faccessat:
+      // TODO
+    case SYS_pselect6:
+      // TODO
+    case SYS_ppoll:
+      // TODO
+    case SYS_unshare:
+      // TODO
+    case SYS_set_robust_list:
+      // TODO
+    case SYS_get_robust_list:
+      // TODO
+    case SYS_splice:
+      // TODO
+    case SYS_tee:
+      // TODO
+    case SYS_sync_file_range:
+      // TODO
+    case SYS_vmsplice:
+      // TODO
+    case SYS_move_pages:
+      // TODO
+    case SYS_utimensat:
+      // TODO
+    case SYS_epoll_pwait:
+      // TODO
+    case SYS_signalfd:
+      // TODO
+    case SYS_timerfd_create:
+      // TODO
+    case SYS_eventfd:
+      // TODO
+    case SYS_fallocate:
+      // TODO
+    case SYS_timerfd_settime:
+      // TODO
+    case SYS_timerfd_gettime:
+      // TODO
+    case SYS_accept4:
+      // TODO
+    case SYS_signalfd4:
+      // TODO
+    case SYS_eventfd2:
+      // TODO
+    case SYS_epoll_create1:
+      // TODO
+    case SYS_dup3:
+      // TODO
+    case SYS_pipe2:
+      // TODO
+    case SYS_inotify_init1:
+      // TODO
+    case SYS_preadv:
+      // TODO
+    case SYS_pwritev:
+      // TODO
+    case SYS_rt_tgsigqueueinfo:
+      // TODO
+    case SYS_perf_event_open:
+      // TODO
+    case SYS_recvmsg:
+      // TODO
+    case SYS_fanotify_init:
+      // TODO
+    case SYS_fanotify_mark:
+      // TODO
+    case SYS_prlimit64:
+      // TODO
+    case SYS_name_to_handle_at:
+      // TODO
+    case SYS_open_by_handle_at:
+      // TODO
+    case SYS_clock_adjtime:
+      // TODO
+    case SYS_syncfs:
+      // TODO
+    case SYS_sendmsg:
+      DENIED
+    case SYS_setns:
+      // TODO
+    case SYS_getcpu:
+      // TODO
+    case SYS_process_vm_readv:
+      DENIED
+    case SYS_process_vm_writev:
+      DENIED
+    case SYS_kcmp:
+      // TODO
+    case SYS_finit_module:
       DENIED
     default:
       // TODO
