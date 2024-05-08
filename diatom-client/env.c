@@ -13,6 +13,10 @@
 #include "handler.c"
 
 pid_t start_process(char **argv, char **envp) {
+  /* Starts a process to be traced, and does important things like
+   * make calls with PTRACE_SETOPTIONS while it's at it. Pretty
+   * boilerplate `fork();` with some fancy `ptrace();` involved. */
+  
   pid_t pid = fork();
 
   switch (pid) {
@@ -26,9 +30,17 @@ pid_t start_process(char **argv, char **envp) {
   waitpid(pid, 0, 0);
 
   ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_EXITKILL);
+  // set other options here
+  //ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
+  //ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
+  //ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
 
   return pid;
 }
+
+/* `enum arg_regs`: a human readable enumeration for thinking about
+ * registers used for syscall arguments.
+ * Remeber, kids: any syscall arguments after R9 are in the stack. */
 
 enum arg_regs {
   REGS_RDI,
@@ -39,19 +51,49 @@ enum arg_regs {
 };
 
 int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
+  /* So, a lot happens here...
+   * First of all, it's safe to assume this file's going to be like
+   * 12,000 lines of code when I'm done with it (if I recall the math
+   * correctly.
+   * So, basically, this is where syscall emulation happens. Every
+   * syscall is handled here. Every. Single. One. */
+
+  // to be used (a lot)
   struct user_regs_struct regs;
 
+  // utilizing `get_tmp_path();` from `data.h` to learn where to
+  // put stuff on the hard drive 
   const char *tmp_path = get_tmp_path();
 
-  char *get_str_arg(enum arg_regs arg_register); // TODO
-  int *get_int_arg(enum arg_regs arg_register);  // TODO
-  // TODO more of these
+  // Here lies the main use of `enum arg_regs`. These functions are
+  // for working with when pointers are fed as syscall arguments.
+  // Knowing the kind of data we're expecting to be pointed to, we
+  // can use these functions to get us the real data.
+  char *get_str_arg(enum arg_regs arg_register)
+  {
+    /* Used for getting whatever string (`char*`) `arg_register`
+     * refers to. */
+    // TODO
+  }
 
+  int *get_int_arg(enum arg_regs arg_register)
+  {
+    /* Used for getting whatever int (`int*) `arg_register`
+     * refers to. */
+  }
+
+  // TODO more of these functions
+
+  // our goddamn endless loop
   for (;;) {
     // utilizing PTRACE_SYSEMU increases performance by
-    // lowering the amount of mode switches.
+    // lowering the amount of mode switches; look it up.
     ptrace(PTRACE_SYSEMU, pid, 0, 0);
+
+    // wait for it...
     waitpid(pid, 0, 0);
+    
+    // then we get the registers
     ptrace(PTRACE_GETREGS, pid, 0, &regs);
 
     /*
@@ -71,6 +113,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
      *   ptrace, process_vm_readv, process_vm_writev
      */
 
+    // these macros ought to help
 #define SYSCALL_RETURN(x)                                                      \
   {                                                                            \
     regs.rax = x;                                                              \
@@ -81,6 +124,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
 #define NOT_IMPLEMENTED ERROR
 #define DENIED ERROR
 
+    // Every. Single. One.
     switch (regs.orig_rax) {
     case SYS_read:
       // TODO
@@ -93,12 +137,14 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       // setting the new file descriptor
       struct fd newfd;
 
+      // TODO this needs fixing.
       newfd.type = FD_TYPE_FILE;
       newfd.flags = newfd.flags ^ newfd.flags;
       newfd.index = newfd.index ^ newfd.index;
       newfd.loc = get_str_arg(REGS_RDI);
       newfd.real_loc = tmp_path;
 
+      // send our data to the central machine...
       {
         void *proto_buf =
             dicp(DICP_REQUEST_INFO, diatom_pid, INFO_FILE, newfd.loc);
@@ -106,6 +152,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
         free(proto_buf);
       }
 
+      // ...then see what it has to say
       struct dscp_response unpacked;
 
       void *proto_buf = recvfrom_central();
@@ -127,12 +174,11 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       else if (strcmp(unpacked.loc, newfd.loc) != 0)
         ERROR;
 
-      // So
-      // We are going to add the data of this file descriptor to a
-      // file at `newfd.real_loc + newfd.loc`, then we're going to
-      // add the file descriptor to the SQLite database in RAM.
-      // Finally, we'll free everything used in the process and give
-      // the good news of success.
+      // Here we add the file descriptor to the SQLite database in
+      // RAM, then we will store the data of this file descriptor to
+      // a file at `newfd.real_loc + newfd.loc`. Finally, we'll free
+      // everything used in the process and give the good news of
+      // success.
 
       int ret = setfd(get_nextfd(), newfd);
       if (ret != 0)
@@ -150,7 +196,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       if (ret != 0)
         ERROR;
 
-      // coast clear
+      // coast is clear
 
       fclose(stream);
 
@@ -161,6 +207,8 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     }
     case SYS_close: {
       SYSCALL_RETURN(clsfd(get_int_arg(RDI)));
+      // `clsfd` deletes any/all data on the hard disk that's
+      // associated with the file descriptor we're purging
     }
     case SYS_stat:
       // TODO
