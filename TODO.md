@@ -22,6 +22,7 @@ All the things that separate this project from being actual software.
    - [ ] tally all the things that a process can request from its
       kernel and make it possible.
      - `protocols/info.h`
+<!--
  - Design the logging system
    - [x] make logging functions
      - `logging/logging.c`
@@ -30,12 +31,15 @@ All the things that separate this project from being actual software.
      - `logging/logging.c`
    - [x] add makefile
      - `logging/makefile`
+-->
  - Diatom client
    - [x] sandbox environment
      - `diatom-client/env.c`
    - [ ] handle _every_, **single**, system call.
    - [x] handle UDP
      - `diatom-client/handler.c`
+   - [ ] make a very thorough logging system
+     - `diatom-client/logging.h`
    - [x] get some persistent data storage
      - `diatom-client/data.c`
    - [ ] duck-tape it all together

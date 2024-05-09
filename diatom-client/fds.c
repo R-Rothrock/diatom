@@ -129,5 +129,3 @@ int fds_exit(void) {
   return sqlite3_close(DB);
 }
 
-
-

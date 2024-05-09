@@ -7,7 +7,6 @@
 #include <sys/user.h>
 #include <sys/wait.h>
 #include <unistd.h>
-
 #include "data.h"
 #include "fds.c"
 #include "handler.c"
@@ -114,10 +113,10 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
      */
 
     // these macros ought to help
-#define SYSCALL_RETURN(x)                                                      \
-  {                                                                            \
-    regs.rax = x;                                                              \
-    goto skip;                                                                 \
+#define SYSCALL_RETURN(x)\
+  {                      \
+    regs.rax = x;        \
+    goto skip;           \
   }
 
 #define ERROR SYSCALL_RETURN(-1)
@@ -138,11 +137,9 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       struct fd newfd;
 
       // TODO this needs fixing.
-      newfd.type = FD_TYPE_FILE;
-      newfd.flags = newfd.flags ^ newfd.flags;
-      newfd.index = newfd.index ^ newfd.index;
-      newfd.loc = get_str_arg(REGS_RDI);
-      newfd.real_loc = tmp_path;
+			newfd.type = FD_TYPE_FILE;
+			newfd.loc = get_str_arg(REGS_RDI);
+			newfd.real_loc = tmp_path;
 
       // send our data to the central machine...
       {
