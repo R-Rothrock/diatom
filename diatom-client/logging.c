@@ -4,14 +4,22 @@
 
 // A primer on how this logging system ought to operate.
 // Logs will be loaded into a heap buffer to speed. A separate thread
-// will work to move these logs from RAM to an actual file. I'm
-// deciding to do it this way so that, for example, I don't have to
-// endure another syscall every time the tracee has another syscall
-// to be emulated. And so, I'm making it so that the main thread
-// doesn't actually have a mode switch. Perhaps there are
-// different/better ways to do this, but this makes the most sense
-// thus far.
-
+// (we will call it the logging thread) will work to move these logs
+// from memory to the hard disk. Additional to this, we will have yet
+// another thread (we will call it the monitoring thread) that will be
+// tasked with making sure we always have an idea of how much space is
+// used/free within the logging buffer.
+// When the buffer gets near overflowing, the index pointer will be
+// moved back to the beginning. By keeping track of where the log
+// index pointer is in contrast to where the logging thread's index
+// pointer, (not to be confused) we will always know what meeds to be
+// written to disk by the logging thread. Additionally, we can keep
+// track of the usage of the logging buffer as so:
+// 
+// part = abs(logging_index - logging_thread_index)
+// whole = log_buffer_size
+// percentage = (part / whole) * 100
+//
 // These logs are designed to be very in-depth. Very little will be
 // omitted. Something like that output of `journalctl` is what I'm
 // going for.
@@ -28,7 +36,7 @@ static FILE *fd;
 
 // This one's prone to change. I don't yet know how to analyze the
 // cost and benefit of using all that memory.
-static int LOG_BUFFER_SIZE 1024 * 1024 * 2 // 2MB
+#define LOG_BUFFER_SIZE 1024 * 1024 * 2 // 2MB
 // the location of the log buffer and the location of where we are in
 // the log buffer
 static void* LOG_BUFFER;
@@ -36,34 +44,24 @@ static void* LOG_BUFFER_INDEX;
 
 // these variables are used only by the logging thread
 
-// the percentage of usage of the log buffer that is finally deemed
-// unacceptible by the logging thread
-static int ACCEPTIBLE_LOG_BUFFER_USAGE_PER = 95;
+// firstly, the logging thread needs to always know where it is in the
+// logging buffer
+static int LOGGING_THREAD_INDEX;
 
-// where the log thread is in the log buffer when reading through it
-static void* LOG_THREAD_LOG_BUFFER_INDEX;
+// since the logging thread doesn't need to be working continuously,
+// I'll make it pause just a bit after each iteration of its loop
+#define LOGGING_THREAD_PAUSE_SEC 1; // in seconds
 
-// how frequently the logging thread checks the usage of the buffer
-// (measured in seconds)
-static int LOG_THREAD_USAGE_CHECK_FREQ = 2;
-
-float get_log_buffer_usage()
-{
-	/* calculates the percentage usage of the log buffer */
-	float ret;
-	int part = LOG_BUFFER_INDEX - LOG_BUFFER;
-	int whole = LOG_BUFFER_SIZE;
-
-	ret = (part / whole) * 100;
-	return ret;
-}
-
+// TODO more variables/?
 void logging_thread()
 {
 	/* Everything the logging thread does is here */
 
-	// First things first, we need to (almost) always know how much
-	// space we have in the logging buffer
+	for(;;)
+	{
+		// TODO
+		sleep(LOGGING_THREAD_PAUSE_SEC);
+	}
 }
 
 int log_init(const char* pathname)
