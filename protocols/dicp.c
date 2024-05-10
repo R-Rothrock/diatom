@@ -8,11 +8,22 @@
 
 #include "dicp.h"
 
+// These are the different DICP packet types.
+// DICP_KILLED: The tracee/process being handled by the client machine
+//              died/terminated/stopped/started/etc.
+// DICP_REQUEST_INFO: The client machine needs data (files, file
+//                    permissions, etc.) on behalf of either the
+//                    tracee or the Diatom Client itself.
+// DICP_ALTER: The client machine alters the central machine's data
+//             (files, etc.) usually on behald of the tracee. The
+//             Diatom Client wouldn't alter data on it's own behalf (
+//             I don't think.)
+
 enum dicp_req {
-  DICP_KILLED,             // process signal (SIGABRT, SIGSEGV, SIGCONT, etc.)
-  DICP_REQUEST_INFO,       // requests files, permissions, etc.
-  DICP_ALTER               // alter files, permissions, etc.
-} __attribute__((packed)); // all values are uint8_t
+  DICP_KILLED,
+	DICP_REQUEST_INFO
+	DICP_ALTER
+} __attribute__((packed));
 
 void *dicp(enum dicp_req req, uint16_t diatom_pid, ...) {
   /* DICP_KILLED:

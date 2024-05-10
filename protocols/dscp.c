@@ -8,6 +8,14 @@
 
 #include "dscp.h"
 
+// These are the different DSCP packet types.
+// DSCP_START_PROCESS: The central machine is handing out a task to a
+//                     client machine.
+// DSCP_KILL: The central machine is putting an end to a task on the
+//            client machine.
+// DSCP_RESPONSE: The central machine is responding to the requests of
+//                a client machine (see DICP_REQUEST_INFO.
+
 enum dscp_req {
   DSCP_START_PROCESS, // used to start processes
   DSCP_KILL,          // used to stop proccess
