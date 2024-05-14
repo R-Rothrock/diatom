@@ -39,7 +39,7 @@ All the things that separate this project from being actual software.
    - [x] handle UDP
      - `diatom-client/handler.c`
    - [ ] make a very thorough logging system
-     - `diatom-client/logging.h`
+     - `diatom-client/logging.c`
    - [x] get some persistent data storage
      - `diatom-client/data.c`
    - [ ] duck-tape it all together

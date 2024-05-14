@@ -1,6 +1,8 @@
 // data.h
 // persistent and runtime data storage
 
+#include<arpa/inet.h> // `in_addr_t`
+
 static char *DATA_PATH;
 
 int data_init() {
@@ -10,7 +12,7 @@ int data_init() {
   // TODO
 }
 
-char *get_central_ip() {
+in_addr_t *get_central_ip() {
   /* Gets central node IP from config file
    */
   // TODO

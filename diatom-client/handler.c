@@ -5,7 +5,10 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 
-#include "deps.h" /* dscp_port */
+#include<data.h> /* `in_addr_t *get_central_ip() */
+
+//#include "deps.h" /* DSCP_PORT */
+#define DSCP_PORT 12036
 
 static int SOCKFD;
 static struct sockaddr_in SERVER_ADDR;

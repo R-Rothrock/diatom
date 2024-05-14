@@ -8,7 +8,8 @@
 // from memory to the hard disk. Additional to this, we will have yet
 // another thread (we will call it the monitoring thread) that will be
 // tasked with making sure we always have an idea of how much space is
-// used/free within the logging buffer.
+// used/free within the logging buffer, in the event this data is ever
+// wanted.
 // When the buffer gets near overflowing, the index pointer will be
 // moved back to the beginning. By keeping track of where the log
 // index pointer is in contrast to where the logging thread's index
@@ -50,10 +51,10 @@ static int LOGGING_THREAD_INDEX;
 
 // since the logging thread doesn't need to be working continuously,
 // I'll make it pause just a bit after each iteration of its loop
-#define LOGGING_THREAD_PAUSE_SEC 1; // in seconds
+#define LOGGING_THREAD_PAUSE_SEC 1 // in seconds
 
-// TODO more variables/?
-void logging_thread()
+// TODO more variables?
+void logging_thread(void)
 {
 	/* Everything the logging thread does is here */
 
@@ -62,6 +63,12 @@ void logging_thread()
 		// TODO
 		sleep(LOGGING_THREAD_PAUSE_SEC);
 	}
+}
+
+void monitoring_thread(void)
+{
+	/* Everything the logging threasd does is here */
+	// TODO
 }
 
 int log_init(const char* pathname)
@@ -120,5 +127,4 @@ int log(enum log_levels level, const char *msg, const char *origin)
 	// TODO
 
 }
-
 
