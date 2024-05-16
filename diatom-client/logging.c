@@ -3,26 +3,30 @@
 // logging system
 
 // A primer on how this logging system ought to operate.
-// Logs will be loaded into a heap buffer to speed. A separate thread
+// Logs will be loaded into a heap buffer for speed. A separate thread
 // (we will call it the logging thread) will work to move these logs
-// from memory to the hard disk. Additional to this, we will have yet
-// another thread (we will call it the monitoring thread) that will be
-// tasked with making sure we always have an idea of how much space is
-// used/free within the logging buffer, in the event this data is ever
-// wanted.
-// When the buffer gets near overflowing, the index pointer will be
-// moved back to the beginning. By keeping track of where the log
-// index pointer is in contrast to where the logging thread's index
-// pointer, (not to be confused) we will always know what meeds to be
-// written to disk by the logging thread. Additionally, we can keep
-// track of the usage of the logging buffer as so:
-// 
-// part = abs(logging_index - logging_thread_index)
-// whole = log_buffer_size
-// percentage = (part / whole) * 100
+// from memory to the hard disk, along with overwriting the space with
+// null bytes. Additional to this, we will have yet another thread (we
+// will call it the monitoring thread) that will be tasked with making
+// sure we always have an idea of how much space is used/free within
+// the logging buffer, in the event this data is ever wanted. When the
+// buffer gets near overflowing, the index pointer will be
+// moved back to the beginning.
+//
+// To calculate the logging buffer usage in bytes, we can do this:
+//
+// if logging_index > logging_thread_index:
+//   logging_index - logging_thread_index
+//
+// if logging_index < logging_thread_index:
+//   null_start - logging_thread_index + logging_index - buffer_start
+//
+// where:
+// `null_start` is where the logging_thread stopped and went back to
+// the beginning of the buffer (where the null bytes at the end start)
 //
 // These logs are designed to be very in-depth. Very little will be
-// omitted. Something like that output of `journalctl` is what I'm
+// omitted. Something like the output of `journalctl` is what I'm
 // going for.
 
 #include<stdio.h>
@@ -30,30 +34,42 @@
 #include<unistd.h>
 #include<pthread.h>
 
-// the file descriptor for the logging
-static FILE *fd;
+/******************
+ * Variables
+ * (lots of them)
+ ******************/
 
-// these variables are to be shared between threads
+// the size of the log buffer. One day this'll be in a config file.
+static unsigned int LOG_BUFFER_SIZE = 1024 * 1024 * 2;
 
-// This one's prone to change. I don't yet know how to analyze the
-// cost and benefit of using all that memory.
-#define LOG_BUFFER_SIZE 1024 * 1024 * 2 // 2MB
-// the location of the log buffer and the location of where we are in
-// the log buffer
-static void* LOG_BUFFER;
-static void* LOG_BUFFER_INDEX;
+static void *LOG_BUFFER;       // the actual buffer
+static void *LOG_INDEX;        // where the logging happens
+static void *NULL_START;       // where the null bytes start at the
+															 // end of the buffer
+static void *LOG_THREAD_INDEX; // where the logging thread is in the
+															 // buffer
+static int TOTAL_USAGE_BYTES;  // the number of bytes used in the
+															 // buffer. Managed by the monitoring
+															 // thread
+// any other variables go here
 
-// these variables are used only by the logging thread
-
-// firstly, the logging thread needs to always know where it is in the
-// logging buffer
-static int LOGGING_THREAD_INDEX;
+/******************
+ * Macro Variables
+ * (not too many)
+ ******************/
 
 // since the logging thread doesn't need to be working continuously,
-// I'll make it pause just a bit after each iteration of its loop
-#define LOGGING_THREAD_PAUSE_SEC 1 // in seconds
+// I'll give it a small pause
+#define LOG_THREAD_REFRESH_RATE 1 // in seconds
 
-// TODO more variables?
+// same goes to the monitoring thread
+#define MONITOR_THREAD_REFRESH_RATE 1 // in seconds
+
+float calc_total_usage_percent(void)
+{
+	// TODO
+}
+
 void logging_thread(void)
 {
 	/* Everything the logging thread does is here */
@@ -67,13 +83,35 @@ void logging_thread(void)
 
 void monitoring_thread(void)
 {
-	/* Everything the logging threasd does is here */
-	// TODO
+	/* Everything the monitoring thread does is here */
+	for(;;)
+	{
+		// TODO implement kill switch
+
+		if(LOG_INDEX > LOG_THREAD_INDEX)
+		{
+			 TOTAL_USAGE_BYTES = LOG_INDEX - LOG_THREAD_INDEX;
+		} else
+		if(LOG_INDX < LOG_THREAD_INDEX)
+		{
+			TOTAL_USAGE_BYTES
+			= NULL_START
+			- LOG_THREAD_INDEX
+			+ LOG_INDEX
+			- LOG_BUFFER;
+		} else
+		{
+			// LOG_INDEX == LOG_THREAD_INDEX
+			TOTAL_USAGE_BYTES = 0;
+		}
+		sleep(MONITOR_THREAD_REFRESH_RATE);
+	}
 }
 
 int log_init(const char* pathname)
 {
-	/* Allocates space in RAM for logs and starts the logging thread */
+	/* Allocates space in RAM for logs and starts the logging thread and
+	 * the monitoring thread */
 	// TODO
 }
 
