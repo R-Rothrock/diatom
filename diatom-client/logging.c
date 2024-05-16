@@ -40,17 +40,23 @@
  ******************/
 
 // the size of the log buffer. One day this'll be in a config file.
-static unsigned int LOG_BUFFER_SIZE = 1024 * 1024 * 2;
+// I don't know how to go about estimating what this value should be.
+// In the meantime, we'll have 1 MB
+static unsigned int LOG_BUFFER_SIZE = 1024 * 1024 * 1;
 
-static void *LOG_BUFFER;       // the actual buffer
-static void *LOG_INDEX;        // where the logging happens
-static void *NULL_START;       // where the null bytes start at the
-															 // end of the buffer
-static void *LOG_THREAD_INDEX; // where the logging thread is in the
-															 // buffer
-static int TOTAL_USAGE_BYTES;  // the number of bytes used in the
-															 // buffer. Managed by the monitoring
-															 // thread
+static void *LOG_BUFFER;        // the actual buffer
+static void *LOG_INDEX;         // where the logging happens
+static void *NULL_START;        // where the null bytes start at the
+															  // end of the buffer
+static void *LOG_THREAD_INDEX;  // where the logging thread is in the
+															  // buffer
+static int TOTAL_USAGE_BYTES;   // the number of bytes used in the
+															  // buffer. Managed by the monitoring
+															  // thread
+static int LOG_THREAD_KILL;     // kill switch for the logging thread
+static int MONITOR_THREAD_KILL; // kill switch for the monitoring
+																// thread
+
 // any other variables go here
 
 /******************
@@ -67,7 +73,7 @@ static int TOTAL_USAGE_BYTES;  // the number of bytes used in the
 
 float calc_total_usage_percent(void)
 {
-	// TODO
+	return (float)TOTAL_USAGE_BYTES/LOG_BUFFER_SIZE * 100.0;
 }
 
 void logging_thread(void)
@@ -76,7 +82,15 @@ void logging_thread(void)
 
 	for(;;)
 	{
-		// TODO
+
+		// kill switch
+		if(LOG_THREAD_KILL)
+		{
+			return NULL;
+		}
+
+		// TODO implement everything else
+
 		sleep(LOGGING_THREAD_PAUSE_SEC);
 	}
 }
@@ -84,9 +98,15 @@ void logging_thread(void)
 void monitoring_thread(void)
 {
 	/* Everything the monitoring thread does is here */
+
 	for(;;)
 	{
-		// TODO implement kill switch
+
+		// kill switch
+		if(MONITOR_THREAD_KILL)
+		{
+			return NULL;
+		}
 
 		if(LOG_INDEX > LOG_THREAD_INDEX)
 		{
@@ -108,11 +128,20 @@ void monitoring_thread(void)
 	}
 }
 
-int log_init(const char* pathname)
+void log_init(const char* pathname)
 {
 	/* Allocates space in RAM for logs and starts the logging thread and
 	 * the monitoring thread */
-	// TODO
+
+	LOG_BUFFER = malloc(LOG_BUFFER_SIZE);
+
+	pthread_t log_thread_id, monitor_thread_id;
+
+	pthread_create(&log_thread_id, NULL, logging_thread, NULL);
+	pthread_join(logging_thread, NULL);
+
+	pthread_create(&monitor_thread_id, NULL, monitoring_thread, NULL);
+	pthread_join(monitoring_thread, NULL);
 }
 
 // different log levels that can be used
@@ -135,6 +164,7 @@ enum log_levels
 // time information used in logging (all in string form)
 struct time_data
 {
+	char[4] year_abbrev;
 	char[3] month_abbrev;
 	char[2] date_abbrev;
 	char[2] hour_abbrev;
