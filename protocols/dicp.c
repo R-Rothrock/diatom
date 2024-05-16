@@ -21,8 +21,7 @@
 
 enum dicp_req {
   DICP_KILLED,
-	DICP_REQUEST_INFO
-	DICP_ALTER
+  DICP_REQUEST_INFO DICP_ALTER
 } __attribute__((packed));
 
 void *dicp(enum dicp_req req, uint16_t diatom_pid, ...) {

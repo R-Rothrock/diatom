@@ -8,7 +8,7 @@
 // "transient in-memory database." In this database we will store the
 // data of the file descriptors.
 
-#include<stdbool.h>
+#include <stdbool.h>
 
 #include <sqlite3.h>
 
@@ -19,7 +19,6 @@ enum fd_type {
   // TODO enumerate. duh.
 } __attribute__((packed));
 
- 
 /* `struct fd`: how we store file descriptor information */
 // enum fd_type type: the type of file descriptor
 // char *loc: location on the central machine (i.e. a path)
@@ -39,9 +38,9 @@ struct fd {
   enum fd_type type;
   char *loc;
   char *real_loc;
-  int  flags; // i.e. O_READONLY
-  int  index  // where we are in our data
-  bool edited // whether or not the data has been edited
+  int flags;      // i.e. O_READONLY
+  int index       // where we are in our data
+      bool edited // whether or not the data has been edited
   // TODO add more where necessary
 };
 
@@ -93,7 +92,8 @@ int fds_init(void) {
     return ret;
   }
 
-  ret = sqlite3_exec(&SQL_INIT_CMD, &DB /* TODO linter says there's problems */);
+  ret =
+      sqlite3_exec(&SQL_INIT_CMD, &DB /* TODO linter says there's problems */);
 
   // TODO confirm all is well, return success
 }
@@ -112,7 +112,7 @@ int setfd(int fd, struct fd *data) {
 int clsfs(int fd) {
   /* Removes file descripter data from the database. Also removes
    * any associated data from the hard drive (`real_loc`). Needless
-   * to say, be a bit careful with this lol. */ 
+   * to say, be a bit careful with this lol. */
   // TODO
 }
 
@@ -128,4 +128,3 @@ int fds_exit(void) {
 
   return sqlite3_close(DB);
 }
-

@@ -1,7 +1,7 @@
 // data.h
 // persistent and runtime data storage
 
-#include<arpa/inet.h> // `in_addr_t`
+#include <arpa/inet.h> // `in_addr_t`
 
 static char *DATA_PATH;
 

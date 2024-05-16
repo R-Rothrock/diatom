@@ -2,20 +2,20 @@
 // https://github.com/R-Rothrock/diatom
 // running programs in what looks like another computers environment.
 
+#include "data.h"
+#include "fds.c"
+#include "handler.c"
 #include <sys/ptrace.h>
 #include <sys/syscall.h>
 #include <sys/user.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "data.h"
-#include "fds.c"
-#include "handler.c"
 
 pid_t start_process(char **argv, char **envp) {
   /* Starts a process to be traced, and does important things like
    * make calls with PTRACE_SETOPTIONS while it's at it. Pretty
    * boilerplate `fork();` with some fancy `ptrace();` involved. */
-  
+
   pid_t pid = fork();
 
   switch (pid) {
@@ -30,9 +30,9 @@ pid_t start_process(char **argv, char **envp) {
 
   ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_EXITKILL);
   // set other options here
-  //ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
-  //ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
-  //ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
+  // ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
+  // ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
+  // ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_...);
 
   return pid;
 }
@@ -61,22 +61,20 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
   struct user_regs_struct regs;
 
   // utilizing `get_tmp_path();` from `data.h` to learn where to
-  // put stuff on the hard drive 
+  // put stuff on the hard drive
   const char *tmp_path = get_tmp_path();
 
   // Here lies the main use of `enum arg_regs`. These functions are
   // for working with when pointers are fed as syscall arguments.
   // Knowing the kind of data we're expecting to be pointed to, we
   // can use these functions to get us the real data.
-  char *get_str_arg(enum arg_regs arg_register)
-  {
+  char *get_str_arg(enum arg_regs arg_register) {
     /* Used for getting whatever string (`char*`) `arg_register`
      * refers to. */
     // TODO
   }
 
-  int *get_int_arg(enum arg_regs arg_register)
-  {
+  int *get_int_arg(enum arg_regs arg_register) {
     /* Used for getting whatever int (`int*) `arg_register`
      * refers to. */
   }
@@ -91,7 +89,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
 
     // wait for it...
     waitpid(pid, 0, 0);
-    
+
     // then we get the registers
     ptrace(PTRACE_GETREGS, pid, 0, &regs);
 
@@ -113,10 +111,10 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
      */
 
     // these macros ought to help
-#define SYSCALL_RETURN(x)\
-  {                      \
-    regs.rax = x;        \
-    goto skip;           \
+#define SYSCALL_RETURN(x)                                                      \
+  {                                                                            \
+    regs.rax = x;                                                              \
+    goto skip;                                                                 \
   }
 
 #define ERROR SYSCALL_RETURN(-1)
@@ -137,9 +135,9 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
       struct fd newfd;
 
       // TODO this needs fixing.
-			newfd.type = FD_TYPE_FILE;
-			newfd.loc = get_str_arg(REGS_RDI);
-			newfd.real_loc = tmp_path;
+      newfd.type = FD_TYPE_FILE;
+      newfd.loc = get_str_arg(REGS_RDI);
+      newfd.real_loc = tmp_path;
 
       // send our data to the central machine...
       {
@@ -388,7 +386,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_getrusage:
       // TODO
     case SYS: // TODO I don't know which goes here
-      // TODO
+              // TODO
     case SYS_times:
       // TODO
     case SYS_ptrace:
@@ -396,7 +394,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_getuid:
       // TODO
     case SYS: // TODO I don't know which goes here
-      // TODO
+              // TODO
     case SYS_getgid:
       // TODO
     case SYS_setuid:
@@ -450,7 +448,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_rt_sigsuspend:
       // TODO
     case SYS_: // TODO fix
-      // TODO
+               // TODO
     case SYS_utime:
       // TODO
     case SYS_mknod:
@@ -466,7 +464,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_fstatfs:
       // TODO
     case SYS: // TODO fix
-      // TODO
+              // TODO
     case SYS_getpriority:
       // TODO
     case SYS_setpriority:
@@ -500,7 +498,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_pivot_root:
       // TODO
     case SYS_sysctl: // TODO fix
-      // TODO
+                     // TODO
     case SYS_prctl:
       // TODO
     case SYS_arch_prctl:
@@ -608,7 +606,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_restart_syscall:
       // TODO
     case SYS_semtimedup: // TODO fix
-      // TODO
+                         // TODO
     case SYS_fadvise64:
       // TODO
     case SYS_timer_create:
@@ -626,7 +624,7 @@ int handle_process_syscalls(pid_t pid, pid_t diatom_pid) {
     case SYS_clock_gettime:
       DENIED
     case SYS_getres: // TODO fix
-      // TODO
+                     // TODO
     case SYS_clock_nanosleep:
       // TODO
     case SYS_exit_group:
