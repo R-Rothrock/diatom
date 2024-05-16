@@ -2,3 +2,12 @@
 # I find myself doing this a lot, so creating this file makes sense
 # to me for the time being
 clang-format -i */*.c */*.h
+
+git add *
+
+git status
+sleep 2 # give time for cancel
+
+git commit -m "\`clang-format\`"
+git push
+
