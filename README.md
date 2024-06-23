@@ -18,6 +18,17 @@ one "central" computer on another "client" computer when imitating the
 central computer's environment. This is accomplished with unencrypted
 UDP communication and ptrace-based syscall emulation.
 
+IMPORTANT NOTE
+---
+
+So, here's the thing: I am just one person. I have written thousands
+of lines of code, and I will have to write a lot more code (the
+estimation is over 25,000 lines) in order to put this project anywhere
+near a finished state. Therefore, seeing as though this is a Sysiphean
+task as a whole, it will not be worked on much I don't suspect. I
+won't consider it dead, but it's not so much alive, either. Of course,
+contributions are welcome; misery loves company!
+
 ## Installation
 
 Can't say.
