@@ -176,3 +176,4 @@ int log(enum log_levels level, const char *msg, const char *origin) {
 
   // TODO
 }
+
